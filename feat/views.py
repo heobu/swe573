@@ -1,14 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, CreateView
-#from django.contrib import messages
-
+from django.views.generic import TemplateView
 from django.views import View
 
-from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm
+from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm
 
 
 class HomeView(TemplateView):
@@ -38,21 +35,25 @@ class LoginView(View):
             login(request, user)
             return redirect('user_home')
         else:
-            #messages.error(request, form.get_invalid_login_error())
             print(form.get_invalid_login_error())
-            #return redirect('login')
             return render(request, "login.html", {'form': form})
 
 class RegisterAsConsumerView(View):
 
     def get(self, request):
         form = RegisterAsConsumerForm()
-        return render(request, "register/consumer.html", {'form': form})
+        profile_form = ConsumerProfileForm()
+        return render(request, "register/consumer.html", {'form': form, 'profile_form': profile_form})
 
     def post(self, request):
         form = RegisterAsConsumerForm(request.POST)
-        if form.is_valid():
-            form.save()
+        profile_form = ConsumerProfileForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
+            user = form.save(commit=False)
+            user.is_consumer = True
+            user.save()
+            user.consumer_profile.date_of_birth = profile_form.cleaned_data.get('date_of_birth')
+            user.consumer_profile.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
@@ -65,37 +66,22 @@ class RegisterAsProviderView(View):
 
     def get(self, request):
         form = RegisterAsProviderForm()
-        return render(request, "register/provider.html", {'form': form})
+        profile_form = ProviderProfileForm()
+        return render(request, "register/provider.html", {'form': form, 'profile_form': profile_form})
 
     def post(self, request):
         form = RegisterAsProviderForm(request.POST)
-        if form.is_valid():
-            form.save()
+        profile_form = ProviderProfileForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
+            user = form.save(commit=False)
+            user.is_provider = True
+            user.save()
+            user.provider_profile.location = profile_form.cleaned_data.get('location')
+            user.provider_profile.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('user_home')
         else:
-            print(form.errors)
             return redirect('register_provider')
-
-"""
-    def post(self, request, *args, **kwargs):
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('home')
-
-        render(request, "register/consumer.html")
-"""
-"""
-class RegisterView(View):
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Hello, World!')
-"""

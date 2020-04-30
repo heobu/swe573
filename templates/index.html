@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<body>
-<h1>Homepage</h1>
-</body>
-</html>
+{% if user.is_authenticated %}
+    <p>Invalid</p>
+{% else %}
+    <p>Homepage.</p>
+{% endif %}

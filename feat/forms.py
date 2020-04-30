@@ -1,28 +1,32 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from feat.models import User
+from feat.models import User, ConsumerProfile, ProviderProfile
 
+class ConsumerProfileForm(forms.ModelForm):
+    date_of_birth = forms.DateField(help_text='YYYY-MM-DD')
 
-# from django.contrib.auth.models import User
+    class Meta:
+        model = ConsumerProfile
+        fields = ('date_of_birth',)
 
-# class LoginForm(AuthenticationForm):
+class ProviderProfileForm(forms.ModelForm):
+    location = forms.CharField(help_text='Location')
 
+    class Meta:
+        model = ProviderProfile
+        fields = ('location',)
 
 class RegisterAsConsumerForm(UserCreationForm):
-    date_of_birth = forms.DateField(help_text='YYYY-MM-DD')
     email = forms.EmailField(help_text='Email')
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'date_of_birth', 'password1', 'password2')
-        # fields = ('username', 'email', 'password1', 'password2')
-
+        fields = ('username', 'email', 'password1', 'password2')
 
 class RegisterAsProviderForm(UserCreationForm):
-    location = forms.DateField(help_text='Location')
     email = forms.EmailField(help_text='Email')
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'location', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')

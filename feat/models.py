@@ -10,25 +10,32 @@ class User(AbstractUser):
 
 
 class ConsumerProfile(models.Model):
-    date_of_birth = models.DateField(blank=True)
+    date_of_birth = models.DateField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, related_name="consumer_profile")
 
 
 class ProviderProfile(models.Model):
-    location = models.TextField(max_length=20, blank=False)
+    location = models.TextField(max_length=20, null=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, related_name="provider_profile")
 
 
 @receiver(post_save, sender=User)
-def create_profile(instance, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs):
+    print('****', created)
+    if created:
+        if instance.is_provider:
+            #ProviderProfile.objects.get_or_create(user=instance)
+            provider_profile = ProviderProfile(user=instance)
+            provider_profile.save()
+        elif instance.is_consumer:
+            #ConsumerProfile.objects.get_or_create(user=instance)
+            consumer_profile = ConsumerProfile(user=instance)
+            consumer_profile.save()
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    print('----')
     if instance.is_provider:
         ProviderProfile.objects.get_or_create(user=instance)
     elif instance.is_consumer:
         ConsumerProfile.objects.get_or_create(user=instance)
-
-@receiver(post_save, sender=User)
-def update_profile(instance, **kwargs):
-    if instance.is_provider:
-        instance.provider_profile.save()
-    elif instance.is_consumer:
-        instance.consumer_profile.save()

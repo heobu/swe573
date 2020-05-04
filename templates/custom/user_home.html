@@ -1,0 +1,9 @@
+{% extends 'custom/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.get_username }}.</p>
+{% else %}
+    <p>Illegal.</p>
+{% endif %}
+{% endblock %}

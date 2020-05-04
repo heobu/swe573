@@ -15,7 +15,7 @@ class UserHomeView(LoginRequiredMixin, TemplateView):
     template_name = "user_home.html"
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = "profile.html"
+    template_name = "custom/profile.html"
 
 class Logout(LoginRequiredMixin, View):
 

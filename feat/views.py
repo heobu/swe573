@@ -12,7 +12,7 @@ class HomeView(TemplateView):
     template_name = "index.html"
 
 class UserHomeView(LoginRequiredMixin, TemplateView):
-    template_name = "user_home.html"
+    template_name = "custom/user_home.html"
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = "custom/profile.html"

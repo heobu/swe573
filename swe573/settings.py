@@ -26,6 +26,7 @@ SECRET_KEY = '+696$e*+-tva_u^))sm4%hjtyt7vqhza)&_7en6yzafw&(ot#!'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['ec2-35-153-202-107.compute-1.amazonaws.com']
 
 
 # Application definition

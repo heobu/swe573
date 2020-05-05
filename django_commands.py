@@ -11,3 +11,7 @@ python manage.py migrate
 python manage.py createsuperuser
 
 # python manage.py makemigrations feat
+
+# Run the application
+python manage.py runserver
+#python manage.py runserver ec2-35-153-202-107.compute-1.amazonaws.com:8000

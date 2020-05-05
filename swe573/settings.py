@@ -26,6 +26,7 @@ SECRET_KEY = '+696$e*+-tva_u^))sm4%hjtyt7vqhza)&_7en6yzafw&(ot#!'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['ec2-35-153-202-107.compute-1.amazonaws.com']
 
 
 # Application definition
@@ -120,3 +121,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Source for the theme: https://github.com/puikinsh/concept
+
+AUTH_USER_MODEL = 'feat.User'
+
+LOGIN_URL = 'login'
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")

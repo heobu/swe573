@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <h3>User Details</h3>
+    <p>Username: {{ user.get_username }}</p>
+    <p>First name: {{ user.first_name }}</p>
+    <p>Last name: {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    {% if user.is_consumer %}
+        <p>Birthday: {{ user.date_of_birth }}</p>
+        <h3>Food</h3>
+        <p>Favourite foods: {{ user.favourite_foods }}</p>
+        <p>Allergies: {{ user.allergies }}</p>
+        <p>Other dietary restrictions: {{ user.dietary_restrictions }}</p>
+        <h3>Reactions</h3>
+        <p>Likes: {{ user.likes }}</p>
+        <p>Disikes: {{ user.dislikes }}</p>
+        <h3>Social Network</h3>
+        <p>Following: {{ user.following }}</p>
+        <p>Followers: {{ user.followers }}</p>
+    {% elif user.is_provider %}
+        <p>Provider</p>
+        <p>Birthday: {{ user.location }}</p>
+    {% endif %}
+    <p>Admin: {{ user.is_superuser }}</p>
+    <p>Staff: {{ user.is_staff }}</p>
+    <p>Active: {{ user.is_active }}</p>
+    <p>Date joined: {{ user.date_joined }}</p>
+{% else %}
+    <p>Illegal.</p>
+{% endif %}
+{% endblock %}

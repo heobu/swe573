@@ -32,7 +32,7 @@ urlpatterns = [
     path('logout', Logout.as_view(), name="logout"),
     path('change_password', ChangePasswordView.as_view(), name="change_password"),
     path('recipe/create', RecipeCreateView.as_view(), name="recipe_create"),
-    path('', include('feat.api_urls')),
+    path('api/', include('feat.api_urls')),
 
     #path('', include('homepage.urls')),
     #path('accounts/', include('django.contrib.auth.urls')),

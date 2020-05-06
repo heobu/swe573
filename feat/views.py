@@ -5,27 +5,27 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.views import View
 
-from rest_framework import viewsets
-from .serializers import ConsumerProfileSerializer, ProviderProfileSerializer
-from .models import ConsumerProfile, ProviderProfile
-
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm
 
 
 class HomeView(TemplateView):
     template_name = "index.html"
 
+
 class UserHomeView(LoginRequiredMixin, TemplateView):
     template_name = "user_home.html"
 
+
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = "profile.html"
+
 
 class Logout(LoginRequiredMixin, View):
 
     def get(self, request):
         logout(request)
         return redirect('home')
+
 
 class ChangePasswordView(View):
 
@@ -39,6 +39,7 @@ class ChangePasswordView(View):
             return redirect('login')
         else:
             return render(request, "custom/change_password.html", {'form': form})
+
 
 class LoginView(View):
 
@@ -56,6 +57,7 @@ class LoginView(View):
             return redirect('user_home')
         else:
             return render(request, "pages/login.html", {'form': form})
+
 
 class RegisterAsConsumerView(View):
 
@@ -81,6 +83,7 @@ class RegisterAsConsumerView(View):
         else:
             return redirect('register_consumer')
 
+
 class RegisterAsProviderView(View):
 
     def get(self, request):
@@ -105,6 +108,7 @@ class RegisterAsProviderView(View):
         else:
             return redirect('register_provider')
 
+
 class RecipeCreateView(View):
 
     def get(self, request):
@@ -112,13 +116,3 @@ class RecipeCreateView(View):
 
     def post(self, request):
         pass
-
-
-
-class ConsumerProfileViewSet(viewsets.ModelViewSet):
-    queryset = ConsumerProfile.objects.all()
-    serializer_class = ConsumerProfileSerializer
-
-class ProviderProfileViewSet(viewsets.ModelViewSet):
-    queryset = ProviderProfile.objects.all()
-    serializer_class = ProviderProfileSerializer

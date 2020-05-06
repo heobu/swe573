@@ -19,6 +19,8 @@ class ProviderProfileForm(forms.ModelForm):
 
 class RegisterAsConsumerForm(UserCreationForm):
     email = forms.EmailField(help_text='Email')
+    password1 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
@@ -26,6 +28,8 @@ class RegisterAsConsumerForm(UserCreationForm):
 
 class RegisterAsProviderForm(UserCreationForm):
     email = forms.EmailField(help_text='Email')
+    password1 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User

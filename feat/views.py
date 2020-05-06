@@ -12,10 +12,10 @@ class HomeView(TemplateView):
     template_name = "index.html"
 
 class UserHomeView(LoginRequiredMixin, TemplateView):
-    template_name = "custom/user_home.html"
+    template_name = "user_home.html"
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = "custom/profile.html"
+    template_name = "profile.html"
 
 class Logout(LoginRequiredMixin, View):
 
@@ -58,7 +58,7 @@ class RegisterAsConsumerView(View):
     def get(self, request):
         form = RegisterAsConsumerForm()
         profile_form = ConsumerProfileForm()
-        return render(request, "custom/register/consumer.html", {'form': form, 'profile_form': profile_form})
+        return render(request, "pages/sign-up.html", {'form': form, 'profile_form': profile_form})
 
     def post(self, request):
         form = RegisterAsConsumerForm(request.POST)
@@ -82,7 +82,7 @@ class RegisterAsProviderView(View):
     def get(self, request):
         form = RegisterAsProviderForm()
         profile_form = ProviderProfileForm()
-        return render(request, "custom/register/provider.html", {'form': form, 'profile_form': profile_form})
+        return render(request, "pages/sign-up.html", {'form': form, 'profile_form': profile_form})
 
     def post(self, request):
         form = RegisterAsProviderForm(request.POST)
@@ -100,3 +100,11 @@ class RegisterAsProviderView(View):
             return redirect('user_home')
         else:
             return redirect('register_provider')
+
+class RecipeCreateView(View):
+
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        pass

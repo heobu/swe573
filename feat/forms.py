@@ -37,6 +37,8 @@ class RegisterAsProviderForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
 class CreateRecipeForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.TextInput())
+
     class Meta:
         model = Recipe
         fields = ('title', 'ingredients', 'description', 'difficulty', 'prepared_in')

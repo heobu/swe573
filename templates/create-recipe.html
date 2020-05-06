@@ -7,11 +7,11 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="section-block" id="basicform">
-                <h3 class="section-title">Basic Form Elements</h3>
+                <h3 class="section-title">Create a Recipe</h3>
                 <p>Use custom button styles for actions in forms, dialogs, and more with support for multiple sizes, states, and more.</p>
             </div>
             <div class="card">
-                <h5 class="card-header">Basic Form</h5>
+                <h5 class="card-header">New Recipe</h5>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
@@ -19,14 +19,28 @@
                         {% for field, obj in form.fields.items %}
                             <div class="form-group">
                                 <label for="{{ field }}" class="col-form-label">{{ field }}</label>
-                                <input id="{{ field }}" type="{{ obj.widget.input_type }}" class="form-control" name="{{ field }}">
-                            </div>
+                                {% if obj.widget.input_type == "text"  %}
+                                    <!-- required? -->
+                                    <textarea required="" class="form-control" name="{{ field }}"></textarea>
+                                {% else  %}
+                                    <input id="{{ field }}" type="{{ obj.widget.input_type }}" class="form-control" name="{{ field }}">
                             <!--<div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="float-xl-right float-none mt-xl-0 mt-4">
                                     <a href="#" class="btn-wishlist m-r-10"><i class="far fa-star"></i></a>
                                 </div>
                             </div>-->
+                                {% endif %}
+                            </div>
                         {% endfor %}
+                        <form>
+                            <input type="text" size="30" onkeyup="searchFoodItem(this.value)">
+                            <div id="livesearch"></div>
+                        </form>
+                        <!--<div class="form-group">
+                            <label for="textfield">Text field</label>
+                            <br>
+                            <input type="text" id="textfield" class="form-control demo" value="#70c24a">
+                        </div>-->
                         <!--<div class="form-group pt-2">
                             <button class="btn btn-block btn-primary" type="submit">Submit</button>
                         </div>-->
@@ -87,4 +101,24 @@
     <!-- ============================================================== -->
     <!-- end basic form  -->
     <!-- ============================================================== -->
+    <script>
+
+    function searchFoodItem(str) {
+        if (str.length==0) {
+            document.getElementById("livesearch").innerHTML="";
+            document.getElementById("livesearch").style.border="0px";
+            return;
+        }
+        var xmlhttp=new XMLHttpRequest();
+        xmlhttp.onreadystatechange=function() {
+            if (this.readyState==4 && this.status==200) {
+                document.getElementById("livesearch").innerHTML=this.responseText;
+                document.getElementById("livesearch").style.border="1px solid #A5ACB2";
+            }
+        }
+        xmlhttp.open("GET","https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&dataType=Foundation&query="+str,true);
+        xmlhttp.send();
+    }
+    </script>
+
 {% endblock %}

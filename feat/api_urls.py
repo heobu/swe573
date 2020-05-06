@@ -5,6 +5,7 @@ from . import api_views
 router = routers.DefaultRouter()
 router.register(r'consumer_profile', api_views.ConsumerProfileViewSet)
 router.register(r'provider_profile', api_views.ProviderProfileViewSet)
+router.register(r'recipe_create', api_views.RecipeCreateViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

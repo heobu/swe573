@@ -5,7 +5,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.views import View
 
-from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm
+from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
+    CreateRecipeForm
+from feat.models import Recipe
 
 
 class HomeView(TemplateView):
@@ -13,7 +15,11 @@ class HomeView(TemplateView):
 
 
 class UserHomeView(LoginRequiredMixin, TemplateView):
-    template_name = "user_home.html"
+
+    def get(self, request):
+        username = request.user.username
+        recipes = Recipe.objects.filter(created_by__username=username).order_by('created_at')
+        return render(request, "user_home.html", {'recipes': recipes})
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
@@ -81,7 +87,7 @@ class RegisterAsConsumerView(View):
             login(request, user)
             return redirect('user_home')
         else:
-            return redirect('register_consumer')
+            return redirect('pages/sign-up.html')
 
 
 class RegisterAsProviderView(View):
@@ -106,13 +112,25 @@ class RegisterAsProviderView(View):
             login(request, user)
             return redirect('user_home')
         else:
-            return redirect('register_provider')
+            return redirect('pages/sign-up.html')
 
-
-class RecipeCreateView(View):
+class RecipeCreateView(View, LoginRequiredMixin):
 
     def get(self, request):
-        pass
+        form = CreateRecipeForm()
+        return render(request, "create-recipe.html", {'form': form})
 
     def post(self, request):
-        pass
+        form = CreateRecipeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            created_by = request.user
+            title = form.cleaned_data.get('title')
+            ingredients = form.cleaned_data.get('ingredients')
+            description = form.cleaned_data.get('description')
+            difficulty = form.cleaned_data.get('difficulty')
+            prepared_in = form.cleaned_data.get('prepared_in')
+            #form.save(commit=True)
+            Recipe.objects.create(created_by=created_by, title=title, ingredients=ingredients, description=description, difficulty=difficulty, prepared_in=prepared_in)
+            return redirect('user_home')
+        else:
+            return render('create-recipe')

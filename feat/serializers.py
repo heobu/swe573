@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from feat.models import ConsumerProfile, ProviderProfile
+from feat.models import ConsumerProfile, ProviderProfile, Recipe
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,3 +20,10 @@ class ProviderProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProviderProfile
         fields = ('location',)
+
+
+class RecipeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Recipe
+        #fields = ('title', 'ingredients', 'description', 'created_by', 'created_at', 'difficulty', 'prepared_in')
+        fields = ('title', 'ingredients', 'description', 'difficulty', 'prepared_in')

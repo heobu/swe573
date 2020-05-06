@@ -59,6 +59,46 @@
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-recipes" role="tabpanel" aria-labelledby="pills-recipes-tab">
+                                <div class="section-block">
+                                    <h3 class="section-title">Recipes</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+                                        <div class="row">
+                                            {% for post in recipes %}
+                                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                    <div class="product-thumbnail">
+                                                        <div class="product-img-head">
+                                                            <div class="product-img">
+                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                            <div class="ribbons"></div>
+                                                            <div class="ribbons-text">New</div>
+                                                            <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <div class="product-content-head">
+                                                                <h3 class="product-title">{{ post.title }}</h3>
+                                                                <div class="product-rating d-inline-block">
+                                                                    <i class="fa fa-fw fa-star"></i>
+                                                                    <i class="fa fa-fw fa-star"></i>
+                                                                    <i class="fa fa-fw fa-star"></i>
+                                                                    <i class="fa fa-fw fa-star"></i>
+                                                                    <i class="fa fa-fw fa-star"></i>
+                                                                </div>
+                                                                <div class="product-price">Level: {{ post.difficulty }}</div>
+                                                            </div>
+                                                            <div class="product-btn">
+                                                                <a href="#" class="btn btn-outline-light">Details</a>
+                                                                <a href="#" class="btn btn-primary">Edit</a>
+                                                                <a href="#" class="btn btn-outline-light"><i class="fas fa-ban"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="pills-menus" role="tabpanel" aria-labelledby="pills-menus-tab">
                             </div>
@@ -66,37 +106,6 @@
                                 <div class="row">
                                     <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
                                         <div class="row">
-                                            {% for post in recipes %}
-                                            <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                                                <div class="product-thumbnail">
-                                                    <div class="product-img-head">
-                                                        <div class="product-img">
-                                                            <img src="assets/images/eco-product-img-1.png" alt="" class="img-fluid"></div>
-                                                        <div class="ribbons"></div>
-                                                        <div class="ribbons-text">New</div>
-                                                        <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
-                                                    </div>
-                                                    <div class="product-content">
-                                                        <div class="product-content-head">
-                                                            <h3 class="product-title">T-Shirt Product Title</h3>
-                                                            <div class="product-rating d-inline-block">
-                                                                <i class="fa fa-fw fa-star"></i>
-                                                                <i class="fa fa-fw fa-star"></i>
-                                                                <i class="fa fa-fw fa-star"></i>
-                                                                <i class="fa fa-fw fa-star"></i>
-                                                                <i class="fa fa-fw fa-star"></i>
-                                                            </div>
-                                                            <div class="product-price">$49.00</div>
-                                                        </div>
-                                                        <div class="product-btn">
-                                                            <a href="#" class="btn btn-primary">Add to Cart</a>
-                                                            <a href="#" class="btn btn-outline-light">Details</a>
-                                                            <a href="#" class="btn btn-outline-light"><i class="fas fa-exchange-alt"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>

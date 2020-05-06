@@ -5,6 +5,10 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.views import View
 
+from rest_framework import viewsets
+from .serializers import ConsumerProfileSerializer, ProviderProfileSerializer
+from .models import ConsumerProfile, ProviderProfile
+
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm
 
 
@@ -108,3 +112,13 @@ class RecipeCreateView(View):
 
     def post(self, request):
         pass
+
+
+
+class ConsumerProfileViewSet(viewsets.ModelViewSet):
+    queryset = ConsumerProfile.objects.all()
+    serializer_class = ConsumerProfileSerializer
+
+class ProviderProfileViewSet(viewsets.ModelViewSet):
+    queryset = ProviderProfile.objects.all()
+    serializer_class = ProviderProfileSerializer

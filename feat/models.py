@@ -51,3 +51,6 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(null=False)
     prepared_in = models.IntegerField(null=False)
+
+class FoodItem(models.Model):
+    print('fififi')

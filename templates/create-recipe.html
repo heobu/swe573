@@ -32,10 +32,46 @@
                                 {% endif %}
                             </div>
                         {% endfor %}
-                        <form>
+                        <!--<form>-->
+                    <!--<div class="product-size border-bottom">
+                        <div class="row">
+                            <div class="product-content">
+                        <div class="btn-group" role="group" aria-label="First group">
                             <input type="text" size="30" onkeyup="searchFoodItem(this.value)">
-                            <div id="livesearch"></div>
-                        </form>
+                        </div>
+                        <h4>Add</h4>
+                        <div class="btn-group" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-outline-light">Add</button>
+                        </div>
+                        <div class="product-qty">
+                            <h4>Quantity</h4>
+                            <div class="quantity">
+                                <input type="number" min="1" max="9" step="1" value="1">
+                            </div>
+                        </div>
+                            </div>
+                        </div>
+                    </div>-->
+                        <div class="form-control product-size border-bottom">
+                            <div class="btn-group" role="group" aria-label="First group">
+                            <!--<h4>Add an ingredient: </h4>-->
+                                <input type="text" size="30" onkeyup="searchFoodItem(this.value)">
+                                <div id="livesearch"></div>
+                            </div>
+                            <div class="btn-group product-size">
+                                <!--<h4>Quantity</h4>-->
+                                <div class="quantity">
+                                    <input type="number" min="0" max="9" step="1" value="0" onclick="addAmount(this.value)">
+                                </div>
+                            </div>
+                            <div class="btn-group product-qty">
+                                <div class="quantity">
+                                    <button type="button" class="btn" onclick="addIngredient()">+</button>
+                                    <!--<a href="#" role="button"><i class="fas fa-fw fa-th" onclick="addIngredient()"></i></a>-->
+                                </div>
+                            </div>
+                         </div>
+                        <!--</form>-->
                         <!--<div class="form-group">
                             <label for="textfield">Text field</label>
                             <br>
@@ -103,21 +139,37 @@
     <!-- ============================================================== -->
     <script>
 
+    var chosenIngredient = null;
+    var chosenAmount = 0;
+
     function searchFoodItem(str) {
-        if (str.length==0) {
-            document.getElementById("livesearch").innerHTML="";
-            document.getElementById("livesearch").style.border="0px";
-            return;
+        if (str.length>0) {
+            $.ajax({
+                url: "https://api.nal.usda.gov/fdc/v1/foods/search",
+                type: "get",
+                data: "api_key=uHpZNeQkPBjLCcnybhVSTcdzjXt6wgNohqA7gRQu&dataType=Foundation&query="+str,
+                success: function(response) {
+                    //var json = $.parseJSON(response);
+                    //var options=json["foods"][0];
+                    chosenIngredient = response["foods"][0]["description"];
+                    $("#livesearch").replaceWith(chosenIngredient);
+                },
+                error: function(response) {
+                    chosenIngredient = null;
+                    $("#livesearch").replaceWith("Error: "+response);
+                },
+            });
         }
-        var xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange=function() {
-            if (this.readyState==4 && this.status==200) {
-                document.getElementById("livesearch").innerHTML=this.responseText;
-                document.getElementById("livesearch").style.border="1px solid #A5ACB2";
-            }
-        }
-        xmlhttp.open("GET","https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&dataType=Foundation&query="+str,true);
-        xmlhttp.send();
+    }
+
+    function addAmount(val) {
+        chosenAmount = val;
+        console.log(chosenIngredient, ":", chosenAmount);
+    }
+
+    function addIngredient() {
+        console.log(chosenIngredient, ":", chosenAmount);
+        $('#ingredients').val(chosenIngredient, ":", chosenAmount);
     }
     </script>
 

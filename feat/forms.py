@@ -51,4 +51,4 @@ class CreateRecipeForm(forms.ModelForm):
 class CreateMenuForm(forms.ModelForm):
     class Meta:
         model = Menu
-        fields = ('title', 'food_items', 'nutritional_value', 'created_by')
+        fields = ('title', 'food_items')

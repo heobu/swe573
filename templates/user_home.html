@@ -108,6 +108,51 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="pills-menus" role="tabpanel" aria-labelledby="pills-menus-tab">
+                                <div class="section-block">
+                                    <h3 class="section-title">Menus</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+                                        <div class="row">
+                                            {% for post in menus %}
+                                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                    <div class="product-thumbnail">
+                                                        <div class="product-img-head">
+                                                            <div class="product-img">
+                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                        {% comment %}
+                                                            {% if post.recent %}
+                                                                <div class="ribbons"></div>
+                                                                <div class="ribbons-text">New</div>
+                                                            {% endif %}
+                                                        {% endcomment %}
+                                                            <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <div class="product-content-head">
+                                                                {% comment %}
+                                                                <a href="/menu/detail/{{ post.id }}" class="product-title">{{ post.title }}</a>
+                                                                {% endcomment %}
+                                                                <a href="#" class="product-title">{{ post.title }}</a>
+                                                                <p>Creator: {{ post.created_by.username }}</p>
+                                                                {% comment %}
+                                                                <div class="product-price">Time: {{ post.prepared_in }}</div>
+                                                                {% endcomment %}
+                                                            </div>
+                                                            {% comment %}
+                                                            <div class="product-btn">
+                                                                <a href="/recipe/detail/{{ post.id }}" class="btn btn-outline-light">Details</a>
+                                                                <a href="#" class="btn btn-primary">Edit</a>
+                                                                <a href="#" class="btn btn-outline-light"><i class="fas fa-ban"></i></a>
+                                                            </div>
+                                                            {% endcomment %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="pills-campaign" role="tabpanel" aria-labelledby="pills-campaign-tab">
                                 <div class="row">

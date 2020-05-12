@@ -21,7 +21,7 @@
                                 <label for="{{ field }}" class="col-form-label">{{ field }}</label>
                                 {% if obj.widget.input_type == "text"  %}
                                     <!-- required? -->
-                                    <textarea required="" class="form-control" name="{{ field }}"></textarea>
+                                    <textarea required="" class="form-control" name="{{ field }}" id="{{ field }}"></textarea>
                                 {% else  %}
                                     <input id="{{ field }}" type="{{ obj.widget.input_type }}" class="form-control" name="{{ field }}">
                             <!--<div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -63,10 +63,10 @@
                                     </select>-->
 
                                     <div class="card-body border-top">
-                                        <h5 class="card-title">Live search</h5>
+                                        <h5 class="card-title">Search a recipe</h5>
                                         <select class="selectpicker" data-live-search="true">
                                             {% for item in recipes %}
-                                                <option data-tokens="ketchup mustard" onclick="addFoodItem('id', 'title')">{{ item.title }}</option>
+                                                <option data-tokens="ketchup mustard" onclick="addFoodItem('{{ item.id }}', '{{ item.title }}')">{{ item.title }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -157,7 +157,7 @@
     <script>
 
     var chosenFoodItem = {id:null, name:null};
-    var chosenAmount = 0;
+    var chosenAmount = 1;
 
     function searchFoodItem(str) {
         if (str.length>0) {
@@ -177,9 +177,8 @@
         chosenFoodItem.id = id
         chosenFoodItem.name = title
         console.log(chosenFoodItem.title, ":", chosenAmount);
-        //temp = $('#food_items').val()
-        //$('#food_items').val(temp.concat(chosenFoodItem["name"],"(", chosenFoodItem["id"], ")", ":", chosenAmount, ";"));
-        $('#food_items').val(chosenFoodItem["name"],"(", chosenFoodItem["id"], ")", ":", chosenAmount, ";");
+        temp = $('#food_items').val()
+        $('#food_items').val(temp.concat(chosenFoodItem["name"],"(", chosenFoodItem["id"], ")", ":", chosenAmount, ";"));
     }
     </script>
 

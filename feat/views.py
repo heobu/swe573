@@ -1,3 +1,5 @@
+import ast
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -22,7 +24,8 @@ class UserHomeView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         username = request.user.username
         recipes = Recipe.objects.filter(created_by__username=username).order_by('created_at').reverse()
-        return render(request, "user_home.html", {'recipes': recipes})
+        menus = Menu.objects.filter(created_by__username=username).order_by('created_at').reverse()
+        return render(request, "user_home.html", {'recipes': recipes, 'menus': menus})
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
@@ -237,8 +240,9 @@ class MenuCreateView(View, LoginRequiredMixin):
                 # Retrieve information from USDA for food items.
 
                 # food item is a recipe
-                recipe_nutritional_value = Menu.objects.get(id=food_id).nutritional_value
-                for nutrient_name, nutrient_value in recipe_nutritional_value:
+                recipe_nutritional_value_str = Recipe.objects.get(id=food_id).nutritional_value
+                recipe_nutritional_value = ast.literal_eval(recipe_nutritional_value_str)
+                for nutrient_name, nutrient_value in recipe_nutritional_value.items():
                     if nutrient_name in menu_nutritional_value:
                         menu_nutritional_value[nutrient_name] += quantity * nutrient_value
 

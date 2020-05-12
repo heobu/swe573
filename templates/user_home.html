@@ -71,8 +71,12 @@
                                                         <div class="product-img-head">
                                                             <div class="product-img">
                                                                 <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
-                                                            <div class="ribbons"></div>
-                                                            <div class="ribbons-text">New</div>
+                                                        {% comment %}
+                                                            {% if post.recent %}
+                                                                <div class="ribbons"></div>
+                                                                <div class="ribbons-text">New</div>
+                                                            {% endif %}
+                                                        {% endcomment %}
                                                             <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
                                                         </div>
                                                         <div class="product-content">
@@ -88,7 +92,7 @@
                                                                 <div class="product-price">Level: {{ post.difficulty }}</div>
                                                             </div>
                                                             <div class="product-btn">
-                                                                <a href="#" class="btn btn-outline-light">Details</a>
+                                                                <a href="/recipe/detail/{{ post.id }}" class="btn btn-outline-light">Details</a>
                                                                 <a href="#" class="btn btn-primary">Edit</a>
                                                                 <a href="#" class="btn btn-outline-light"><i class="fas fa-ban"></i></a>
                                                             </div>

@@ -53,21 +53,33 @@
                         </div>
                     </div>-->
                         <div class="form-control product-size border-bottom">
-                            <div class="btn-group" role="group" aria-label="First group">
-                            <!--<h4>Add an ingredient: </h4>-->
-                                <input type="text" size="30" onkeyup="searchFoodItem(this.value)">
-                                <div id="livesearch"></div>
-                            </div>
-                            <div class="btn-group product-size">
-                                <!--<h4>Quantity</h4>-->
-                                <div class="quantity">
-                                    <input type="number" min="0" max="9" step="1" value="0" onclick="addAmount(this.value)">
-                                </div>
-                            </div>
-                            <div class="btn-group product-qty">
-                                <div class="quantity">
-                                    <button type="button" class="btn" onclick="addIngredient()">+</button>
-                                    <!--<a href="#" role="button"><i class="fas fa-fw fa-th" onclick="addIngredient()"></i></a>-->
+                            <div class="card ">
+                                <div class="card-body border-top">
+                                    <!--<h5 class="card-title">Live search</h5>
+                                    <select class="selectpicker" data-live-search="true">
+                                        <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+                                        <option data-tokens="mustard">Burger, Shake and a Smile</option>
+                                        <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                                    </select>-->
+
+                                    <div class="btn-group" role="group" aria-label="First group">
+                                    <!--<h4>Add an ingredient: </h4>-->
+                                        <input type="text" size="30" onkeyup="searchFoodItem(this.value)">
+                                        <div id="livesearch"></div>
+                                    </div>
+
+                                    <div class="btn-group product-size">
+                                        <!--<h4>Quantity</h4>-->
+                                        <div class="quantity">
+                                            <input type="number" min="0" max="9" step="1" value="0" onclick="addAmount(this.value)">
+                                        </div>
+                                    </div>
+                                    <div class="btn-group product-qty">
+                                        <div class="quantity">
+                                            <button type="button" class="btn" onclick="addIngredient()">+</button>
+                                            <!--<a href="#" role="button"><i class="fas fa-fw fa-th" onclick="addIngredient()"></i></a>-->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                          </div>
@@ -139,7 +151,7 @@
     <!-- ============================================================== -->
     <script>
 
-    var chosenIngredient = null;
+    var chosenIngredient = {id:null, name:null};
     var chosenAmount = 0;
 
     function searchFoodItem(str) {
@@ -151,7 +163,8 @@
                 success: function(response) {
                     //var json = $.parseJSON(response);
                     //var options=json["foods"][0];
-                    chosenIngredient = response["foods"][0]["description"];
+                    chosenIngredient["id"] = response["foods"][0]["fdcId"];
+                    chosenIngredient["name"] = response["foods"][0]["description"];
                     $("#livesearch").replaceWith(chosenIngredient);
                 },
                 error: function(response) {
@@ -169,7 +182,8 @@
 
     function addIngredient() {
         console.log(chosenIngredient, ":", chosenAmount);
-        $('#ingredients').val(chosenIngredient, ":", chosenAmount);
+        temp = $('#ingredients').val()
+        $('#ingredients').val(temp.concat(chosenIngredient["name"],"(", chosenIngredient["id"], ")", ":", chosenAmount, ";"));
     }
     </script>
 

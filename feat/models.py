@@ -45,6 +45,7 @@ class Recipe(models.Model):
     print('rrrr')
     title = models.TextField(max_length=40, null=False)
     ingredients = models.TextField(max_length=100, null=False)
+    nutritional_value = models.TextField(max_length=1000, null=False)
     description = models.TextField(max_length=300, null=False)
     # picture (optional)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="recipe_creator")

@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{% static 'assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/charts/c3charts/c3.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/fonts/flag-icon-css/flag-icon.min.css' %}">
+    {% comment %}<link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-select/css/bootstrap-select.css' %}">{% endcomment %}
     <title>Concept - Bootstrap 4 Admin Dashboard Template</title>
 </head>
 
@@ -29,11 +30,7 @@
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                {% if user.is_authenticated %}
-                    <a class="navbar-brand" href="home">Feat</a>
-                {%  else %}
-                    <a class="navbar-brand" href="">Feat</a>
-                {% endif %}
+                <a class="navbar-brand" href="/home">Feat</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -131,9 +128,9 @@
                                     <h5 class="mb-0 text-white nav-user-name">{{ user.get_username }}</h5>
                                     <!--<span class="status"></span><span class="ml-2">Available</span>-->
                                 </div>
-                                <a class="dropdown-item" href="profile"><i class="fas fa-user mr-2"></i>Profile</a>
+                                <a class="dropdown-item" href="/profile"><i class="fas fa-user mr-2"></i>Profile</a>
                                 <!--<a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i>Setting</a>-->
-                                <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                                <a class="dropdown-item" href="/logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                             </div>
                         </li>
                         {% endif %}
@@ -156,18 +153,25 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav flex-column">
+                            <li class="nav-divider">
+                                Menu
+                            </li>
                             {% if not user.is_authenticated %}
-                                <li class="nav-divider">
-                                    Menu
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/login" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Login </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="login" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Login </a>
+                                    <a class="nav-link" href="/register/consumer" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Register as Consumer </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="register/consumer" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Register as Consumer </a>
+                                    <a class="nav-link" href="/register/provider" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Register as Provider </a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/recipe/create" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Create a Recipe </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="register/provider" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Register as Provider </a>
+                                    <a class="nav-link" href="/menu/create" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Create a Menu </a>
                                 </li>
                             {% endif %}
                             <!--<li class="nav-divider">

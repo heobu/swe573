@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from feat.views import HomeView, RegisterAsConsumerView, RegisterAsProviderView, UserHomeView, LoginView, Logout, \
-    ChangePasswordView, ProfileView, RecipeCreateView, RecipeView
+    ChangePasswordView, ProfileView, RecipeCreateView, RecipeView, MenuCreateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,8 +33,10 @@ urlpatterns = [
     path('change_password', ChangePasswordView.as_view(), name="change_password"),
     path('recipe/create', RecipeCreateView.as_view(), name="recipe_create"),
     path('recipe/detail/<int:id>', RecipeView.as_view()),
+    path('menu/create', MenuCreateView.as_view(), name="menu_create"),
     path('api/', include('feat.api_urls')),
 
+    #path('recipe/edit/<int:id>', RecipeView.as_view()),
     #path('', include('homepage.urls')),
     #path('accounts/', include('django.contrib.auth.urls')),
     #path('accounts/signup/', SignUp.as_view(), name='signup'),

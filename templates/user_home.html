@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load recipe_filter %}
 {% block content %}
     <div class="influence-profile">
         <div class="container-fluid dashboard-content ">
@@ -81,21 +82,23 @@
                                                         </div>
                                                         <div class="product-content">
                                                             <div class="product-content-head">
-                                                                <h3 class="product-title">{{ post.title }}</h3>
+                                                                <a href="/recipe/detail/{{ post.id }}" class="product-title">{{ post.title }}</a>
+                                                                <p>Creator: {{ post.created_by.username }}</p>
                                                                 <div class="product-rating d-inline-block">
-                                                                    <i class="fa fa-fw fa-star"></i>
-                                                                    <i class="fa fa-fw fa-star"></i>
-                                                                    <i class="fa fa-fw fa-star"></i>
-                                                                    <i class="fa fa-fw fa-star"></i>
-                                                                    <i class="fa fa-fw fa-star"></i>
+                                                                    Difficulty:
+                                                                    {% for i in post.difficulty|times %}
+                                                                        <i class="fa fa-fw fa-star"></i>
+                                                                    {% endfor %}
                                                                 </div>
-                                                                <div class="product-price">Level: {{ post.difficulty }}</div>
+                                                                <div class="product-price">Time: {{ post.prepared_in }}</div>
                                                             </div>
+                                                            {% comment %}
                                                             <div class="product-btn">
                                                                 <a href="/recipe/detail/{{ post.id }}" class="btn btn-outline-light">Details</a>
                                                                 <a href="#" class="btn btn-primary">Edit</a>
                                                                 <a href="#" class="btn btn-outline-light"><i class="fas fa-ban"></i></a>
                                                             </div>
+                                                            {% endcomment %}
                                                         </div>
                                                     </div>
                                                 </div>

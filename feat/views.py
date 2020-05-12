@@ -9,8 +9,8 @@ from urllib.request import urlopen
 import json
 
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
-    CreateRecipeForm
-from feat.models import Recipe
+    CreateRecipeForm, CreateMenuForm
+from feat.models import Recipe, Menu
 
 
 class HomeView(TemplateView):
@@ -21,7 +21,7 @@ class UserHomeView(LoginRequiredMixin, TemplateView):
 
     def get(self, request):
         username = request.user.username
-        recipes = Recipe.objects.filter(created_by__username=username).order_by('created_at')
+        recipes = Recipe.objects.filter(created_by__username=username).order_by('created_at').reverse()
         return render(request, "user_home.html", {'recipes': recipes})
 
 
@@ -159,7 +159,12 @@ class RecipeCreateView(View, LoginRequiredMixin):
                 nutrients = data["foodNutrients"]
                 for n in nutrients:
                     nutrient_name = n["nutrient"]["name"]
-                    nutrient_value = n["nutrient"]["rank"]
+                    #nutrient_value = n["nutrient"]["rank"]
+                    try:
+                        nutrient_value = n["amount"]
+                    except KeyError:
+                        print("Nutrient amount could not be found for: ", nutrient_name)
+                        nutrient_value = 0
                     if nutrient_name in nutritional_value:
                         nutritional_value[nutrient_name] += quantity * nutrient_value
                 # for n in nutrients:
@@ -193,3 +198,52 @@ class RecipeView(View, LoginRequiredMixin):
         #recipe = Recipe.objects.all()[0]#filter(id=id)
         recipe = Recipe.objects.get(id=id)
         return render(request, "recipe-detail.html", {'recipe': recipe})
+
+
+
+class MenuCreateView(View, LoginRequiredMixin):
+
+    def get(self, request):
+        form = CreateMenuForm()
+        recipes = Recipe.objects.filter().order_by('title')
+        return render(request, "create-menu.html", {'form': form, 'recipes': recipes})
+
+    def post(self, request):
+        form = CreateMenuForm(request.POST, instance=request.user)
+        if form.is_valid():
+            created_by = request.user
+            title = form.cleaned_data.get('title')
+
+            # adapter: string -> ingredient model
+            food_items_input = form.cleaned_data.get('food_items')
+            #Ex: Recipe Title([recipe_id]]):[quantity];
+            pattern = r'([\w*(,\s)?]+)\(([0-9]*)\)\:([0-9]*)\;'
+            r = re.compile(pattern)
+            food_items = r.findall(food_items_input)
+            menu_nutritional_value = {
+                "Energy": 0,
+                "Protein": 0,
+                "Carbohydrates": 0,
+                "Total lipid (fat)": 0,
+                "Minerals": 0,
+                "Vitamins and Other Components": 0,
+                "Water": 0
+            }
+            for i in food_items:
+                food_id = i[1]
+                quantity = int(i[2])
+
+                # food item is not a recipe
+                # Retrieve information from USDA for food items.
+
+                # food item is a recipe
+                recipe_nutritional_value = Menu.objects.get(id=food_id).nutritional_value
+                for nutrient_name, nutrient_value in recipe_nutritional_value:
+                    if nutrient_name in menu_nutritional_value:
+                        menu_nutritional_value[nutrient_name] += quantity * nutrient_value
+
+            #form.save(commit=True)
+            Menu.objects.create(created_by=created_by, title=title, food_items=food_items, nutritional_value=menu_nutritional_value)
+            return redirect('user_home')
+        else:
+            return render('create-menu')

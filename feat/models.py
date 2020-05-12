@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
@@ -55,3 +57,17 @@ class Recipe(models.Model):
 
 class FoodItem(models.Model):
     print('fififi')
+
+class Menu(models.Model):
+    print('mmmm')
+    title = models.TextField(max_length=40, null=False)
+    food_items = models.CharField(max_length=300)
+    nutritional_value = models.TextField(max_length=1000, null=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="menu_creator")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def set_food_items(self, food_items):
+        self.food_items = json.dumps(food_items)
+
+    def get_food_items(self):
+        return json.loads(self.food_items)

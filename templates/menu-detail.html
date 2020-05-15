@@ -8,13 +8,13 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="page-header">
-                <h2 class="pageheader-title">Recipe </h2>
+                <h2 class="pageheader-title">Menu </h2>
                 <p class="pageheader-text">Nulla euismod urna eros, sit amet scelerisque torton lectus vel mauris facilisis faucibus at enim quis massa lobortis rutrum.</p>
                 <div class="page-breadcrumb">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Recipe</li>
+                            <li class="breadcrumb-item active" aria-current="page">Menu</li>
                         </ol>
                     </nav>
                 </div>
@@ -60,7 +60,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pl-xl-0 pl-lg-0 pl-md-0 border-left m-b-30">
                     <div class="product-details">
                         <div class="border-bottom pb-3 mb-3">
-                            <h2 class="mb-3">{{ recipe.title }}</h2>
+                            <h2 class="mb-3">{{ menu.title }}</h2>
                             <!--<div class="product-rating d-inline-block float-right">
                                 <i class="fa fa-fw fa-star"></i>
                                 <i class="fa fa-fw fa-star"></i>
@@ -74,17 +74,21 @@
                         </div>
                         <div class="product-colors border-bottom">
                             <h4>Preparation Time</h4>
+                            {% comment %}
                             <div class="product-rating d-inline-block">
-                                <i class="fas fa-clock">{{ recipe.prepared_in }} minutes</i>
+                                <i class="fas fa-clock">{{ menu.prepared_in }} minutes</i>
                             </div>
+                            {% endcomment %}
                         </div>
                         <div class="product-size border-bottom">
                             <h4>Difficulty</h4>
                             <div class="btn-group" role="group" aria-label="First group">
                                 <div class="product-rating d-inline-block">
-                                    {% for i in recipe.difficulty|times %}
+                                    {% comment %}
+                                    {% for i in menu.difficulty|times %}
                                         <i class="fa fa-fw fa-star"></i>
                                     {% endfor %}
+                                    {% endcomment %}
                                 </div>
                             </div>
                         </div>
@@ -96,13 +100,12 @@
                         </div>
                         <div class="product-description border-bottom">
                             <h4 class="mb-1">Creator</h4>
-                            <p>{{ recipe.created_by.username }}</p>
+                            <p>{{ menu.created_by.username }}</p>
                         </div>
                         <div class="product-btn">
                             <div class="product-rating d-inline-block">
                                 <!--<a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>-->
                                 <a href="#" class="btn btn-primary"><i class="fas fa-tag"></i></a>
-                                <a href="#" class="btn btn-outline-light">Add to Menu</a>
                                 <a href="#" class="btn btn-outline-light">Add to Daily Intake</a>
                                 <a href="#" class="btn btn-danger"><i class="fas fa-ban"></i></a>
                             </div>
@@ -129,20 +132,20 @@
                                         <h3 class="product-title">Ingredients</h3>
                                     </div>
                                     <div class="product-price">
-                                        <i class="fas fa-edit" onclick="editRecipe('ingredients')"></i>
+                                        <i class="fas fa-edit" onclick="editMenu('ingredients')"></i>
                                     </div>
-                                    <p>{{ recipe.ingredients }}</p>
+                                    <p>{{ menu.food_items }}</p>
                                 </div>
                                 <div class="product-content-head">
                                     <div class="product-rating d-inline-block">
                                         <h3 class="product-title">Description</h3>
                                     </div>
                                     <div class="product-price">
-                                        <i class="fas fa-edit" onclick="editRecipe('description')"></i>
+                                        <i class="fas fa-edit" onclick="editMenu('description')"></i>
                                     </div>
-                                    <p>{{ recipe.description }}</p>
+                                    <p>{{ menu.description }}</p>
                                     <ul class="list-unstyled arrow">
-                                        {% for step in recipe.steps %}
+                                        {% for step in menu.steps %}
                                             <li>{{ step }}</li>
                                         {% endfor %}
                                     </ul>
@@ -153,7 +156,7 @@
                                     <div class="product-rating d-inline-block">
                                         <h3 class="product-title">NutritionalValue</h3>
                                     </div>
-                                    <p>{{ recipe.nutritional_value }}</p>
+                                    <p>{{ menu.nutritional_value }}</p>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="product-tab-2">
@@ -197,7 +200,7 @@
             </div>
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-b-10">
-                    <h3> Recommended Recipes</h3>
+                    <h3> Recommended Menus</h3>
                 </div>
                 {% for recommended in recommendations %}
                     <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -222,7 +225,7 @@
                                 </div>
                                 <div class="product-btn">
                                     <a href="#" class="btn btn-primary">Details</a>
-                                    <!-- If the user is the creator of the recipe. -->
+                                    <!-- If the user is the creator of the menu. -->
                                     <a href="#" class="btn btn-outline-light">Edit</a>
                                     <a href="#" class="btn btn-outline-light"><i class="fas fa-exchange-alt"></i></a>
                                 </div>
@@ -244,8 +247,8 @@
         <!-- main js -->
         <script src="{% static 'assets/libs/js/main-js.js' %}"></script>
 
-        <script>function editRecipe() {
-            console.log("edit recipe")
+        <script>function editMenu() {
+            console.log("edit menu")
         }
 
         jQuery('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.quantity input');

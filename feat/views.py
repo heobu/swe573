@@ -10,6 +10,7 @@ import re
 from urllib.request import urlopen
 import json
 
+from feat.converter.converter import CookingConverter
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
     CreateRecipeForm, CreateMenuForm
 from feat.models import Recipe, Menu
@@ -163,12 +164,17 @@ class RecipeCreateView(View, LoginRequiredMixin):
                 for n in nutrients:
                     nutrient_name = n["nutrient"]["name"]
                     #nutrient_value = n["nutrient"]["rank"]
-                    try:
-                        nutrient_value = n["amount"]
-                    except KeyError:
-                        print("Nutrient amount could not be found for: ", nutrient_name)
-                        nutrient_value = 0
                     if nutrient_name in nutritional_value:
+                        try:
+                            nutrient_value = n["amount"]
+                            nutrient_unit = n["nutrient"]["unitName"]
+                            # should kJ always be ignored? or is there a case in which only this is given instead of kcal?
+                            if nutrient_unit.lower() == "kj":
+                                continue
+                            nutrient_value = CookingConverter().to_standard(nutrient_value, nutrient_unit, nutrient_name)
+                        except KeyError:
+                            print("Nutrient amount/unit: '", nutrient_name, "' could not be found for food item: '", food_id, "'.")
+                            nutrient_value = 0
                         nutritional_value[nutrient_name] += quantity * nutrient_value
                 # for n in nutrients:
                 #     nutrient_name = n["nutrient"]["name"]
@@ -251,3 +257,9 @@ class MenuCreateView(View, LoginRequiredMixin):
             return redirect('user_home')
         else:
             return render('create-menu')
+
+class MenuView(View, LoginRequiredMixin):
+    def get(self, request, id=None):
+        #recipe = Recipe.objects.all()[0]#filter(id=id)
+        menu = Menu.objects.get(id=id)
+        return render(request, "menu-detail.html", {'menu': menu})

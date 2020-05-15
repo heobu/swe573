@@ -68,6 +68,89 @@ class CookingConverterTest(unittest.TestCase):
 
         self.assertAlmostEqual(expected_mass, actual_mass)
 
+    def test_to_standard_for_a_standard_unit_of_energy(self):
+        quantity = 100
+        unit = "kcal"
+        type = "Energy"
+
+        actual = self.converter.to_standard(quantity, unit, type)
+
+        expected = 100
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_to_standard_for_a_nonstandard_unit_of_energy(self):
+        quantity = 100
+        type = "Energy"
+
+        unit = "kJ"
+
+        actual = self.converter.to_standard(quantity, unit, type)
+
+        expected = 23.9
+        self.assertAlmostEqual(expected, actual, places=2)
+
+        unit = "cal"
+
+        actual = self.converter.to_standard(quantity, unit, type)
+
+        expected = 100000
+        self.assertAlmostEqual(expected, actual)
+
+    def test_to_standard_for_a_standard_unit_of_mass(self):
+        quantity = 100
+        unit = "g"
+        type = "Carbohydrates"
+
+        actual = self.converter.to_standard(quantity, unit, type)
+
+        expected = 100
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_to_standard_for_a_nonstandard_unit_of_mass(self):
+        quantity = 100
+        type = "Carbohydrates"
+
+        #unit = "pound"
+        #actual = self.converter.to_standard(quantity, unit, type)
+        #expected = 23.9
+        #self.assertAlmostEqual(expected, actual)
+
+        unit = "kg"
+
+        actual = self.converter.to_standard(quantity, unit, type)
+
+        expected = 100000
+        self.assertAlmostEqual(expected, actual)
+
+    def test_to_standard_for_a_standard_unit_of_volume(self):
+        quantity = 100
+        unit = "ml"
+        type = "Water"
+
+        actual = self.converter.to_standard(quantity, unit, type)
+
+        expected = 100
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_to_standard_for_a_nonstandard_unit_of_volume(self):
+        quantity = 100
+        type = "Water"
+
+        #unit = "cm3"
+        #actual = self.converter.to_standard(quantity, unit, type)
+        #expected = 23.9
+        #self.assertAlmostEqual(expected, actual)
+
+        unit = "l"
+
+        actual = self.converter.to_standard(quantity, unit, type)
+
+        expected = 100000
+        self.assertAlmostEqual(expected, actual)
+
     # def test_conversion_from_ml_volume_to_g_mass_word_order(self):
     #     volume = 100
     #     unit = "ml"

@@ -156,11 +156,22 @@
                                         <i class="fas fa-edit" onclick="editRecipe('description')"></i>
                                     </div>
                                     <p>{{ recipe.description }}</p>
+                                </div>
+                                <div class="product-content-head">
+                                    <div class="product-rating d-inline-block">
+                                        <h3 class="product-title">Instructions</h3>
+                                    </div>
+                                    <div class="product-price">
+                                        <i class="fas fa-edit" onclick="editRecipe('instructions')"></i>
+                                    </div>
+                                    <p>{{ recipe.instructions }}</p>
+                                    {% comment %}
                                     <ul class="list-unstyled arrow">
-                                        {% for step in recipe.steps %}
-                                            <li>{{ step }}</li>
+                                        {% for instruction in recipe.instructions %}
+                                            <li>{{ instruction }}</li>
                                         {% endfor %}
                                     </ul>
+                                    {% endcomment %}
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab-nv" role="tabpanel" aria-labelledby="product-tab-nv">

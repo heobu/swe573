@@ -196,10 +196,11 @@ class RecipeCreateView(View, LoginRequiredMixin):
             #nutritional_value_str = json.dumps(nutritional_value)
 
             description = form.cleaned_data.get('description')
+            instructions = form.cleaned_data.get('instructions')
             difficulty = form.cleaned_data.get('difficulty')
             prepared_in = form.cleaned_data.get('prepared_in')
             #form.save(commit=True)
-            Recipe.objects.create(created_by=created_by, title=title, ingredients=ingredients_input, nutritional_value=nutritional_value, description=description, difficulty=difficulty, prepared_in=prepared_in)
+            Recipe.objects.create(created_by=created_by, title=title, ingredients=ingredients_input, nutritional_value=nutritional_value, description=description, instructions=instructions, difficulty=difficulty, prepared_in=prepared_in)
             return redirect('user_home')
         else:
             return render('create-recipe')
@@ -224,6 +225,7 @@ class MenuCreateView(View, LoginRequiredMixin):
         if form.is_valid():
             created_by = request.user
             title = form.cleaned_data.get('title')
+            description = form.cleaned_data.get('description')
 
             # adapter: string -> ingredient model
             food_items_input = form.cleaned_data.get('food_items')
@@ -255,7 +257,7 @@ class MenuCreateView(View, LoginRequiredMixin):
                         menu_nutritional_value[nutrient_name] += quantity * nutrient_value
 
             #form.save(commit=True)
-            Menu.objects.create(created_by=created_by, title=title, food_items=food_items, nutritional_value=menu_nutritional_value)
+            Menu.objects.create(created_by=created_by, title=title, description=description, food_items=food_items, nutritional_value=menu_nutritional_value)
             return redirect('user_home')
         else:
             return render('create-menu')

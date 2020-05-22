@@ -45,10 +45,10 @@ class CreateRecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('title', 'ingredients', 'description', 'difficulty', 'prepared_in')
+        fields = ('title', 'ingredients', 'description', 'instructions', 'difficulty', 'prepared_in')
 
 
 class CreateMenuForm(forms.ModelForm):
     class Meta:
         model = Menu
-        fields = ('title', 'food_items')
+        fields = ('title', 'description', 'food_items')

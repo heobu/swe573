@@ -25,13 +25,13 @@ class ProviderProfileSerializer(serializers.HyperlinkedModelSerializer):
 class RecipeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('title', 'ingredients', 'description', 'difficulty', 'prepared_in')
+        fields = ('title', 'ingredients', 'description', 'instructions', 'difficulty', 'prepared_in')
 
 
 class MenuSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Menu
-        fields = ('title', 'food_items', 'nutritional_value', 'created_at')
+        fields = ('title', 'description', 'food_items', 'nutritional_value', 'created_at')
 
 
 class RecipeLikeSerializer(serializers.HyperlinkedModelSerializer):

@@ -50,6 +50,7 @@ class Recipe(models.Model):
     ingredients = models.TextField(max_length=100, null=False)
     nutritional_value = models.TextField(max_length=1000, null=False)
     description = models.TextField(max_length=300, null=False)
+    instructions = models.TextField(max_length=300, null=False)
     # picture (optional)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="recipe_creator")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -81,6 +82,7 @@ class FoodItem(models.Model):
 class Menu(models.Model):
     print('mmmm')
     title = models.TextField(max_length=40, null=False)
+    description = models.TextField(max_length=300, null=False)
     food_items = models.CharField(max_length=300)
     nutritional_value = models.TextField(max_length=1000, null=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="menu_creator")

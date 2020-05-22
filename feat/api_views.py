@@ -38,8 +38,9 @@ class UpdateRecipeLikeRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.Generi
     def toggle(self, request, pk=None):
         like = RecipeLike.objects.get(recipe_id=pk)
         try:
+            print("Toggle recipe")
+            cprofile = ConsumerProfile.objects.get(recipelike__cprofiles__user_id=request.user.id, recipelike__recipe_id=pk)
             print("Unliking recipe")
-            cprofile = ConsumerProfile.objects.get(recipelike__cprofiles__user_id=request.user.id)
             like.cprofiles.remove(cprofile)
         except ConsumerProfile.DoesNotExist:
             print("Liking recipe")
@@ -58,8 +59,9 @@ class UpdateMenuLikeRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.GenericV
     def toggle(self, request, pk=None):
         like = MenuLike.objects.get(menu_id=pk)
         try:
+            print("Toggle menu")
+            cprofile = ConsumerProfile.objects.get(menulike__cprofiles__user_id=request.user.id, menulike__menu_id=pk)
             print("Unliking menu")
-            cprofile = ConsumerProfile.objects.get(menulike__cprofiles__user_id=request.user.id)
             like.cprofiles.remove(cprofile)
         except ConsumerProfile.DoesNotExist:
             print("Liking menu")

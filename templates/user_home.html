@@ -155,100 +155,147 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--<div class="row">
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                        <div class="section-block">
-                                            <h3 class="section-title">My Recipes</h3>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h1 class="mb-1">9</h1>
-                                                <p>Recipes</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h1 class="mb-1">35</h1>
-                                                <p>Menus</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h1 class="mb-1">8</h1>
-                                                <p>Accepted Campaigns</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h1 class="mb-1">1</h1>
-                                                <p>Declined Campaigns</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>-->
                                 <div class="section-block">
                                     <h3 class="section-title">Liked Posts</h3>
                                 </div>
-                                {% for post in liked_posts %}
-                                <div class="card">
-                                    <div class="card-body">
+                                <!--<div class="section-block">
+                                    <h4 class="section-title">Liked Recipes</h4>
+                                </div>-->
+                                <div class="row">
+                                    <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
                                         <div class="row">
-                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                <div class="media influencer-profile-data d-flex align-items-center p-2">
-                                                    <div class="mr-4">
-                                                        <img src="{% static 'assets/images/slack.png' %}" alt="User Avatar" class="user-avatar-lg">
-                                                    </div>
-                                                    <div class="media-body ">
-                                                        <div class="influencer-profile-data">
-                                                            <h3 class="m-b-10">Your Campaign Title Here</h3>
-                                                            <p>
-                                                                <span class="m-r-20 d-inline-block">Draft Due Date
-                                                                    <span class="m-l-10 text-primary">24 Jan 2018</span>
-                                                                </span>
-                                                                <span class="m-r-20 d-inline-block"> Publish Date
-                                                                    <span class="m-l-10 text-secondary">30 Feb 2018</span>
-                                                                </span>
-                                                                    <span class="m-r-20 d-inline-block">Ends <span class="m-l-10  text-info">30 May, 2018</span>
-                                                                </span>
-                                                            </p>
+                                            {% for like in rlikes %}
+                                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                    <div class="product-thumbnail">
+                                                        <div class="product-img-head">
+                                                            <div class="product-img">
+                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                        {% comment %}
+                                                            {% if post.recent %}
+                                                                <div class="ribbons"></div>
+                                                                <div class="ribbons-text">New</div>
+                                                            {% endif %}
+                                                        {% endcomment %}
+                                                            <!--<div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>-->
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <div class="product-content-head">
+                                                                <a href="/recipe/detail/{{ like.id }}" class="product-title">{{ like.title }}</a>
+                                                                <p>Creator: {{ like.created_by.username }}</p>
+                                                                {% comment %}
+                                                                <div class="product-price">Time: {{ post.prepared_in }}</div>
+                                                                {% endcomment %}
+                                                                <div class="product-price">Recipe</div>
+                                                            </div>
+                                                            {% comment %}
+                                                            <div class="product-btn">
+                                                                <a href="/recipe/detail/{{ post.id }}" class="btn btn-outline-light">Details</a>
+                                                                <a href="#" class="btn btn-primary">Edit</a>
+                                                                <a href="#" class="btn btn-outline-light"><i class="fas fa-ban"></i></a>
+                                                            </div>
+                                                            {% endcomment %}
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="border-top card-footer p-0">
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">45k</h4>
-                                            <p>Total Reach</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">29k</h4>
-                                            <p>Total Views</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">5k</h4>
-                                            <p>Total Click</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">4k</h4>
-                                            <p>Engagement</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">2k</h4>
-                                            <p>Conversion</p>
+                                            {% endfor %}
+                                            {% for like in mlikes %}
+                                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                    <div class="product-thumbnail">
+                                                        <div class="product-img-head">
+                                                            <div class="product-img">
+                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                        {% comment %}
+                                                            {% if post.recent %}
+                                                                <div class="ribbons"></div>
+                                                                <div class="ribbons-text">New</div>
+                                                            {% endif %}
+                                                        {% endcomment %}
+                                                            <!--<div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>-->
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <div class="product-content-head">
+                                                                <a href="/menu/detail/{{ like.id }}" class="product-title">{{ like.title }}</a>
+                                                                <p>Creator: {{ like.created_by.username }}</p>
+                                                                {% comment %}
+                                                                <div class="product-price">Time: {{ post.prepared_in }}</div>
+                                                                {% endcomment %}
+                                                                <div class="product-price">Menu</div>
+                                                            </div>
+                                                            {% comment %}
+                                                            <div class="product-btn">
+                                                                <a href="/recipe/detail/{{ post.id }}" class="btn btn-outline-light">Details</a>
+                                                                <a href="#" class="btn btn-primary">Edit</a>
+                                                                <a href="#" class="btn btn-outline-light"><i class="fas fa-ban"></i></a>
+                                                            </div>
+                                                            {% endcomment %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
-                                {% endfor %}
+                                <!--<div class="section-block">
+                                    <h4 class="section-title">Liked Menus</h4>
+                                </div>-->
+                                <div class="row">
+                                    <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+                                        <div class="row">
+                                            {% for post in liked_posts %}
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                            <div class="media influencer-profile-data d-flex align-items-center p-2">
+                                                                <div class="mr-4">
+                                                                    <img src="{% static 'assets/images/slack.png' %}" alt="User Avatar" class="user-avatar-lg">
+                                                                </div>
+                                                                <div class="media-body ">
+                                                                    <div class="influencer-profile-data">
+                                                                        <h3 class="m-b-10">Your Campaign Title Here</h3>
+                                                                        <p>
+                                                                            <span class="m-r-20 d-inline-block">Draft Due Date
+                                                                                <span class="m-l-10 text-primary">24 Jan 2018</span>
+                                                                            </span>
+                                                                            <span class="m-r-20 d-inline-block"> Publish Date
+                                                                                <span class="m-l-10 text-secondary">30 Feb 2018</span>
+                                                                            </span>
+                                                                                <span class="m-r-20 d-inline-block">Ends <span class="m-l-10  text-info">30 May, 2018</span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="border-top card-footer p-0">
+                                                    <div class="campaign-metrics d-xl-inline-block">
+                                                        <h4 class="mb-0">45k</h4>
+                                                        <p>Total Reach</p>
+                                                    </div>
+                                                    <div class="campaign-metrics d-xl-inline-block">
+                                                        <h4 class="mb-0">29k</h4>
+                                                        <p>Total Views</p>
+                                                    </div>
+                                                    <div class="campaign-metrics d-xl-inline-block">
+                                                        <h4 class="mb-0">5k</h4>
+                                                        <p>Total Click</p>
+                                                    </div>
+                                                    <div class="campaign-metrics d-xl-inline-block">
+                                                        <h4 class="mb-0">4k</h4>
+                                                        <p>Engagement</p>
+                                                    </div>
+                                                    <div class="campaign-metrics d-xl-inline-block">
+                                                        <h4 class="mb-0">2k</h4>
+                                                        <p>Conversion</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
                                 <div class="card">

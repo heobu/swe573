@@ -26,7 +26,9 @@ class UserHomeView(LoginRequiredMixin, TemplateView):
         username = request.user.username
         recipes = Recipe.objects.filter(created_by__username=username).order_by('created_at').reverse()
         menus = Menu.objects.filter(created_by__username=username).order_by('created_at').reverse()
-        return render(request, "user_home.html", {'recipes': recipes, 'menus': menus})
+        rlikes = Recipe.objects.filter(recipelike__cprofiles__user_id=request.user.id).order_by('created_at').reverse()[:10]
+        mlikes = Menu.objects.filter(menulike__cprofiles__user_id=request.user.id).order_by('created_at').reverse()[:10]
+        return render(request, "user_home.html", {'recipes': recipes, 'menus': menus, 'rlikes': rlikes, 'mlikes': mlikes})
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):

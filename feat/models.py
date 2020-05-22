@@ -14,6 +14,8 @@ class User(AbstractUser):
 class ConsumerProfile(models.Model):
     date_of_birth = models.DateField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, related_name="consumer_profile")
+    # liked_recipes = models.ManyToManyField(RecipeLike, auto_now_add=True)
+    # liked_menus = models.ManyToManyField(MenuLike, auto_now_add=True)
 
 
 class ProviderProfile(models.Model):
@@ -26,13 +28,14 @@ def create_user_profile(sender, instance, created, **kwargs):
     print('****', created)
     if created:
         if instance.is_provider:
-            #ProviderProfile.objects.get_or_create(user=instance)
+            # ProviderProfile.objects.get_or_create(user=instance)
             provider_profile = ProviderProfile(user=instance)
             provider_profile.save()
         elif instance.is_consumer:
-            #ConsumerProfile.objects.get_or_create(user=instance)
+            # ConsumerProfile.objects.get_or_create(user=instance)
             consumer_profile = ConsumerProfile(user=instance)
             consumer_profile.save()
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -54,9 +57,29 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(null=False)
     prepared_in = models.IntegerField(null=False)
+    #like = models.OneToOneField(RecipeLike, on_delete=CASCADE, null=False)
+
+    def get_like_count(self):
+        return self.recipelike.cprofiles.count()
+
+
+@receiver(post_save, sender=Recipe)
+def create_recipe_like(sender, instance, created, **kwargs):
+    print('rl****', created)
+    if created:
+        recipe_like = RecipeLike(recipe=instance)
+        recipe_like.save()
+
+
+@receiver(post_save, sender=Recipe)
+def save_recipe_like(sender, instance, **kwargs):
+    print('rl----')
+    RecipeLike.objects.get_or_create(recipe=instance)
+
 
 class FoodItem(models.Model):
     print('fififi')
+
 
 class Menu(models.Model):
     print('mmmm')
@@ -71,3 +94,17 @@ class Menu(models.Model):
 
     def get_food_items(self):
         return json.loads(self.food_items)
+
+    def get_like_count(self):
+        return self.menulike.cprofiles.count()
+
+
+class RecipeLike(models.Model):
+    recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, null=False)
+    cprofiles = models.ManyToManyField(ConsumerProfile)
+
+
+class MenuLike(models.Model):
+    menu = models.OneToOneField(Menu, on_delete=models.CASCADE, null=False)
+    cprofiles = models.ManyToManyField(ConsumerProfile)
+

@@ -49,9 +49,6 @@
                                 <a class="nav-link" id="pills-campaign-tab" data-toggle="pill" href="#pills-campaign" role="tab" aria-controls="pills-campaign" aria-selected="true">Likes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-packages-tab" data-toggle="pill" href="#pills-packages" role="tab" aria-controls="pills-packages" aria-selected="false">Dislikes</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-selected="false">Following</a>
                             </li>
                             <li class="nav-item">
@@ -78,7 +75,7 @@
                                                                 <div class="ribbons-text">New</div>
                                                             {% endif %}
                                                         {% endcomment %}
-                                                            <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
+                                                            <!--<div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>-->
                                                         </div>
                                                         <div class="product-content">
                                                             <div class="product-content-head">
@@ -126,7 +123,7 @@
                                                                 <div class="ribbons-text">New</div>
                                                             {% endif %}
                                                         {% endcomment %}
-                                                            <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
+                                                            <!--<div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>-->
                                                         </div>
                                                         <div class="product-content">
                                                             <div class="product-content-head">
@@ -201,67 +198,6 @@
                                     <h3 class="section-title">Liked Posts</h3>
                                 </div>
                                 {% for post in liked_posts %}
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                <div class="media influencer-profile-data d-flex align-items-center p-2">
-                                                    <div class="mr-4">
-                                                        <img src="{% static 'assets/images/slack.png' %}" alt="User Avatar" class="user-avatar-lg">
-                                                    </div>
-                                                    <div class="media-body ">
-                                                        <div class="influencer-profile-data">
-                                                            <h3 class="m-b-10">Your Campaign Title Here</h3>
-                                                            <p>
-                                                                <span class="m-r-20 d-inline-block">Draft Due Date
-                                                                    <span class="m-l-10 text-primary">24 Jan 2018</span>
-                                                                </span>
-                                                                <span class="m-r-20 d-inline-block"> Publish Date
-                                                                    <span class="m-l-10 text-secondary">30 Feb 2018</span>
-                                                                </span>
-                                                                    <span class="m-r-20 d-inline-block">Ends <span class="m-l-10  text-info">30 May, 2018</span>
-                                                                </span>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="border-top card-footer p-0">
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">45k</h4>
-                                            <p>Total Reach</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">29k</h4>
-                                            <p>Total Views</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">5k</h4>
-                                            <p>Total Click</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">4k</h4>
-                                            <p>Engagement</p>
-                                        </div>
-                                        <div class="campaign-metrics d-xl-inline-block">
-                                            <h4 class="mb-0">2k</h4>
-                                            <p>Conversion</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            <div class="tab-pane fade" id="pills-packages" role="tabpanel" aria-labelledby="pills-packages-tab">
-                                <div class="row">
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                        <div class="section-block">
-                                            <h2 class="section-title">Disliked Posts</h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% for post in disliked_posts %}
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">

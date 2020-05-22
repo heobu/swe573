@@ -14,8 +14,6 @@ class User(AbstractUser):
 class ConsumerProfile(models.Model):
     date_of_birth = models.DateField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, related_name="consumer_profile")
-    # liked_recipes = models.ManyToManyField(RecipeLike, auto_now_add=True)
-    # liked_menus = models.ManyToManyField(MenuLike, auto_now_add=True)
 
 
 class ProviderProfile(models.Model):
@@ -57,7 +55,6 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(null=False)
     prepared_in = models.IntegerField(null=False)
-    #like = models.OneToOneField(RecipeLike, on_delete=CASCADE, null=False)
 
     def get_like_count(self):
         return self.recipelike.cprofiles.count()
@@ -97,6 +94,20 @@ class Menu(models.Model):
 
     def get_like_count(self):
         return self.menulike.cprofiles.count()
+
+
+@receiver(post_save, sender=Menu)
+def create_menu_like(sender, instance, created, **kwargs):
+    print('ml****', created)
+    if created:
+        menu_like = MenuLike(menu=instance)
+        menu_like.save()
+
+
+@receiver(post_save, sender=Menu)
+def save_menu_like(sender, instance, **kwargs):
+    print('ml----')
+    MenuLike.objects.get_or_create(menu=instance)
 
 
 class RecipeLike(models.Model):

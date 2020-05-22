@@ -269,45 +269,14 @@
                     type: "get",
                     data: "",
                     success: function(response) {
-                        //console.log("success, ", $("#recipe-like").getAttribute("class").toString());
                         $("#recipe-like").toggleClass("fas fa-heart").toggleClass("fas fa-paint-brush");
-                        /*if($("#recipe-like").className == "fas fa-heart") {
-                            console.log("was not liked");
-                            $("#recipe-like").replaceWith('<i class="fas fa-paint-brush" onclick="toggleRecipeLike(' + recipe_id + ')"></i>');
-                        } else {
-                            console.log("was liked");
-                            $("#recipe-like").replaceWith('<i class="fas fa-heart" onclick="toggleRecipeLike(' + recipe_id + ')"></i>');
-                        }*/
-                        //$(".fas .fa-heart").replaceWith('<i class="fas fa-paint-brush" onclick="unlikeRecipe(' + recipe_id + ')"></i>');
-                        //$(".fas .fa-heart").replaceWith("fas fa-paint-brush");
                     },
                     error: function(response) {
                         console.log("error");
-                        //$("#livesearch").replaceWith("Error: "+response);
                     },
                 });
             }
         }
-
-        /*function unlikeRecipe(recipe_id) {
-            console.log("unlike a recipe")
-            if (recipe_id>=0) {
-                $.ajax({
-                    url: "http://localhost:8000/api/like/recipe/" + recipe_id + "/toggle",
-                    type: "get",
-                    data: "",
-                    success: function(response) {
-                        console.log("success");
-                        $(".fas .fa-paint-brush").replaceWith('<i class="fas fa-heart" onclick="likeRecipe(' + recipe_id + ')"></i>');
-                        //$(".fas .fa-paint-brush").replaceWith("fas fa-heart");
-                    },
-                    error: function(response) {
-                        console.log("error");
-                        //$("#livesearch").replaceWith("Error: "+response);
-                    },
-                });
-            }
-        }*/
 
         function editRecipe() {
             console.log("edit recipe")

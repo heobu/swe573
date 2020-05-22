@@ -105,7 +105,21 @@
                         <div class="product-btn">
                             <div class="product-rating d-inline-block">
                                 <!--<a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>-->
-                                <a href="/api/like/menu/{{ menu.id }}" class="product-wishlist-btn"><i class="fas fa-heart"></i></a>
+                                {% if user.is_consumer %}
+                                    {% if user.consumer_profile in menu.menulike.cprofiles.all %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-paint-brush" id="menu-like" onclick="toggleMenuLike({{ menu.id }})"></i></a>
+                                    {% else %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-heart" id="menu-like" onclick="toggleMenuLike({{ menu.id }})"></i></a>
+                                    {% endif %}
+                                {% elif user.is_provider %}
+                                    {% if user.provider_profile in menu.menulike.cprofiles.all %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-paint-brush" id="menu-like" onclick="toggleMenuLike({{ menu.id }})"></i></a>
+                                    {% else %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-heart" id="menu-like" onclick="toggleMenuLike({{ menu.id }})"></i></a>
+                                    {% endif %}
+                                {% else %}
+                                    <!-- Other types of users? Such as Admmin... -->
+                                {% endif %}
                                 <a href="#" class="btn btn-primary"><i class="fas fa-tag"></i></a>
                                 <a href="#" class="btn btn-outline-light">Add to Daily Intake</a>
                                 <a href="#" class="btn btn-danger"><i class="fas fa-ban"></i></a>
@@ -248,7 +262,26 @@
         <!-- main js -->
         <script src="{% static 'assets/libs/js/main-js.js' %}"></script>
 
-        <script>function editMenu() {
+        <script>
+
+        function toggleMenuLike(menu_id) {
+            console.log("toggle menu like")
+            if (menu_id>=0) {
+                $.ajax({
+                    url: "http://localhost:8000/api/like/menu/" + menu_id + "/toggle",
+                    type: "get",
+                    data: "",
+                    success: function(response) {
+                        $("#menu-like").toggleClass("fas fa-heart").toggleClass("fas fa-paint-brush");
+                    },
+                    error: function(response) {
+                        console.log("error");
+                    },
+                });
+            }
+        }
+
+        function editMenu() {
             console.log("edit menu")
         }
 

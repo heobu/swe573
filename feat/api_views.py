@@ -29,56 +29,41 @@ class MenuCreateViewSet(viewsets.ModelViewSet):
     serializer_class = MenuSerializer
 
 
-# class RecipeLikeViewSet(viewsets.ModelViewSet):
-#     queryset = RecipeLike.objects.filter(id=id).update(is_liked=True)
-#     serializer_class = RecipeLikeSerializer
-#
-#     def update(self, instance, *args, **kwargs):
-#         instance.is_liked = True
-#
-# class MenuLikeViewSet(viewsets.ModelViewSet):
-#     queryset = MenuLike.objects.get(id=id)
-#     serializer_class = MenuLikeSerializer
-
-# class UpdateRecipeLikeRetrieveViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
-#     #lookup_field = 'recipeId'
-#     queryset = RecipeLike.objects.all()
-#     #queryset = RecipeLike.objects.get_or_create()
-#     serializer_class = RecipeLikeSerializer
-
-#mixins.UpdateModelMixin,
+# Customers can like/unlike recipes. Can providers?
 class UpdateRecipeLikeRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    #lookup_url_kwarg = "recipe_id"
     queryset = RecipeLike.objects.all()
-    #queryset = RecipeLike.objects.filter(recipe_id=recipe_id).update()
     serializer_class = RecipeLikeSerializer
 
     @action(methods=['get'], detail=True, url_path='toggle', url_name='toggle')
-    #def toggle(self, instance, *args, **kwargs):
     def toggle(self, request, pk=None):
-        print("huuuuu------------------", pk)
-        ##recipe_id = self.kwargs.get(self.lookup_url_kwarg)
-        #likes = RecipeLike.objects.filter(recipe_id=pk)
-        #print(len(likes))
-        ##like = RecipeLike.objects.get(recipe_id=pk)
-        ##like.cprofiles
-        #cprofiles = ConsumerProfile.objects.filter(recipelike__cprofiles__user_id=request.user.id)
         like = RecipeLike.objects.get(recipe_id=pk)
         try:
             print("Unliking recipe")
             cprofile = ConsumerProfile.objects.get(recipelike__cprofiles__user_id=request.user.id)
             like.cprofiles.remove(cprofile)
-        #print(cprofile)
-        #if cprofile is None:
         except ConsumerProfile.DoesNotExist:
             print("Liking recipe")
             cprofile = ConsumerProfile.objects.get(user_id=request.user.id)
             like.cprofiles.add(cprofile)
 
-        #print(request.user.id)
-        #likes.update_or_create(kwargs)
         return HttpResponse(status=200)
 
-    # queryset = RecipeLike.objects.filter(recipe_id=recipe_id).update()
-    # self.update(instance, *args, **kwargs)
-    # self.update-partial(instance, *args, **kwargs)
+
+# Customers can like/unlike menus. Can providers?
+class UpdateMenuLikeRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    queryset = MenuLike.objects.all()
+    serializer_class = MenuLikeSerializer
+
+    @action(methods=['get'], detail=True, url_path='toggle', url_name='toggle')
+    def toggle(self, request, pk=None):
+        like = MenuLike.objects.get(menu_id=pk)
+        try:
+            print("Unliking menu")
+            cprofile = ConsumerProfile.objects.get(menulike__cprofiles__user_id=request.user.id)
+            like.cprofiles.remove(cprofile)
+        except ConsumerProfile.DoesNotExist:
+            print("Liking menu")
+            cprofile = ConsumerProfile.objects.get(user_id=request.user.id)
+            like.cprofiles.add(cprofile)
+
+        return HttpResponse(status=200)

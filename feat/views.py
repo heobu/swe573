@@ -12,8 +12,8 @@ import json
 
 from feat.converter.converter import CookingConverter
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
-    CreateRecipeForm, CreateMenuForm
-from feat.models import Recipe, Menu
+    CreateRecipeForm, CreateMenuForm, CommentForm
+from feat.models import Recipe, Menu, Comment
 
 
 class HomeView(TemplateView):
@@ -209,7 +209,22 @@ class RecipeView(View, LoginRequiredMixin):
     def get(self, request, id=None):
         #recipe = Recipe.objects.all()[0]#filter(id=id)
         recipe = Recipe.objects.get(id=id)
-        return render(request, "recipe-detail.html", {'recipe': recipe})
+        form = CommentForm()
+        return render(request, "recipe-detail.html", {'recipe': recipe, 'form': form})
+
+    # , recipe=None
+    def post(self, request, id=None):
+        form = CommentForm(request.POST, instance=request.user)
+        if form.is_valid():
+            created_by = request.user
+            recipe = Recipe.objects.get(id=id)
+            content = form.cleaned_data.get('content')
+            #recipe = form.cleaned_data.get('recipe')
+            Comment.objects.create(created_by=created_by, content=content, recipe=recipe)
+            #return redirect('user_home')
+            return redirect('/recipe/detail/{}'.format(id))
+        else:
+            return render('create-menu')
 
 
 

@@ -121,3 +121,9 @@ class MenuLike(models.Model):
     menu = models.OneToOneField(Menu, on_delete=models.CASCADE, null=False)
     cprofiles = models.ManyToManyField(ConsumerProfile)
 
+class Comment(models.Model):
+    content = models.TextField(max_length=300, null=False)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=False, related_name="comment")
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="author")
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False, null=False)

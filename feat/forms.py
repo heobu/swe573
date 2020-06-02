@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from feat.models import User, ConsumerProfile, ProviderProfile, Recipe, Menu
+from feat.models import User, ConsumerProfile, ProviderProfile, Recipe, Menu, Comment
 
 
 class ConsumerProfileForm(forms.ModelForm):
@@ -52,3 +52,8 @@ class CreateMenuForm(forms.ModelForm):
     class Meta:
         model = Menu
         fields = ('title', 'description', 'food_items')
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)

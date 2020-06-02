@@ -183,39 +183,43 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="product-tab-2">
-                                <div class="review-block">
-                                    <p class="review-text font-italic m-0">“Vestibulum cursus felis vel arcu convallis, viverra commodo felis bibendum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin non auctor est, sed lacinia velit. Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus mus.”</p>
-                                    <div class="rating-star mb-4">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
+                                <div class="card">
+                                    <h5 class="card-header">Comment</h5>
+                                    <div class="card-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="offset-xl-3 col-xl-6 offset-lg-3 col-lg-3 col-md-12 col-sm-12 col-12 p-4">
+                                                    <div class="form-group">
+                                                        <!--<label for="messages">Comment</label>-->
+                                                        <textarea class="form-control" name="content" id="content" rows="3"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary float-right">Submit</button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <span class="text-dark font-weight-bold">Virgina G. Lightfoot</span><small class="text-mute"> (Company name)</small>
                                 </div>
-                                <div class="review-block border-top mt-3 pt-3">
-                                    <p class="review-text font-italic m-0">“Integer pretium laoreet mi ultrices tincidunt. Suspendisse eget risus nec sapien malesuada ullamcorper eu ac sapien. Maecenas nulla orci, varius ac tincidunt non, ornare a sem. Aliquam sed massa volutpat, aliquet nibh sit amet, tincidunt ex. Donec interdum pharetra dignissim.”</p>
-                                    <div class="rating-star mb-4">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                    </div>
-                                    <span class="text-dark font-weight-bold">Ruby B. Matheny</span><small class="text-mute"> (Company name)</small>
-                                </div>
-                                <div class="review-block  border-top mt-3 pt-3">
-                                    <p class="review-text font-italic m-0">“ Cras non rutrum neque. Sed lacinia ex elit, vel viverra nisl faucibus eu. Aenean faucibus neque vestibulum condimentum maximus. In id porttitor nisi. Quisque sit amet commodo arcu, cursus pharetra elit. Nam tincidunt lobortis augueat euismod ante sodales non. ”</p>
-                                    <div class="rating-star mb-4">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                    </div>
-                                    <span class="text-dark font-weight-bold">Gloria S. Castillo</span><small class="text-mute"> (Company name)</small>
-                                </div>
+                                {% for comment in recipe.comment.all %}
+                                    {% if comment.is_deleted == False %}
+                                        <div class="card">
+                                            <h6 class="card-header"><span class="text-dark font-weight-bold">{{ comment.created_by }}</span><small class="text-mute"> {{ comment.created_at }} </small></h6>
+                                            <div class="card-body">
+                                                <div class="review-block">
+                                                    <p class="review-text font-italic m-0" id="comment{{ comment.id }}">{{ comment.content }}</p>
+                                                    <!--<div class="product-btn">
+                                                        If the user is the author of the comment.
+                                                        <a href="#" class="btn btn-outline-light">Edit</a>
+                                                        <a href="#" class="btn btn-primary">Report</a>
+                                                    </div>-->
+                                                </div>
+                                                <div class="product-wishlist-btn">
+                                                    <i class="fas fa-edit" onclick="editComment('{{ comment.id }}', '{{ comment.content }}')"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -272,8 +276,15 @@
 
         <script>
 
+        function editComment(comment_id, content) {
+            console.log("edit comment");
+            if (comment_id>=0) {
+                $("#comment"+comment_id).replaceWith('<textarea class="review-text font-italic m-0" id="comment' + comment_id + ' name="comment">' + content + '</textarea>');
+            }
+        }
+
         function toggleRecipeLike(recipe_id) {
-            console.log("toggle recipe like")
+            console.log("toggle recipe like");
             if (recipe_id>=0) {
                 $.ajax({
                     url: "http://localhost:8000/api/like/recipe/" + recipe_id + "/toggle",

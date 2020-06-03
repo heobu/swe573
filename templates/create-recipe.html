@@ -53,37 +53,44 @@
                             </div>
                         </div>
                     </div>-->
-                        <div class="form-control product-size border-bottom">
-                            <div class="card ">
-                                <div class="card-body border-top">
-                                    <!--<h5 class="card-title">Live search</h5>
-                                    <select class="selectpicker" data-live-search="true">
-                                        <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
-                                        <option data-tokens="mustard">Burger, Shake and a Smile</option>
-                                        <option data-tokens="frosting">Sugar, Spice and all things nice</option>
-                                    </select>-->
-
-                                    <div class="btn-group" role="group" aria-label="First group">
-                                    <!--<h4>Add an ingredient: </h4>-->
-                                        <input type="text" size="30" onkeyup="searchFoodItem(this.value)">
-                                        <div id="livesearch"></div>
-                                    </div>
-
-                                    <div class="btn-group product-size">
-                                        <!--<h4>Quantity</h4>-->
-                                        <div class="quantity">
-                                            <input type="number" min="0" max="9" step="1" value="0" onclick="addAmount(this.value)">
-                                        </div>
-                                    </div>
-                                    <div class="btn-group product-qty">
-                                        <div class="quantity">
-                                            <button type="button" class="btn" onclick="addIngredient()">+</button>
-                                            <!--<a href="#" role="button"><i class="fas fa-fw fa-th" onclick="addIngredient()"></i></a>-->
-                                        </div>
-                                    </div>
+                        <div class="card-body border-top">
+                            <!--<h5 class="card-title">Live search</h5>
+                            <select class="selectpicker" data-live-search="true">
+                                <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+                                <option data-tokens="mustard">Burger, Shake and a Smile</option>
+                                <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                            </select>-->
+                            <!--<div class="btn-group" role="group" aria-label="First group">
+                                <input type="text" size="30" onkeyup="searchFoodItem(this.value)">
+                                <div id="livesearch"></div>
+                            </div>-->
+                            <h5 class="card-title">Add an ingredient:</h5>
+                            <div id="div-ingredient">
+                                <select id="livesearch-ingredient" class="selectpicker" data-live-search="true">
+                                </select>
+                            </div>
+                            <!--<h5 class="card-title">Pick a unit:</h5>
+                            <div id="div-unit">
+                            <select id="livesearch-unit" class="selectpicker">
+                            </select>
+                            </div>-->
+                            <div id="div-unit">
+                                <select id="livesearch-unit" class="selectpicker">
+                                </select>
+                                <!--<input type="number" min="0" max="9" step="1" value="0" onclick="addAmount(this.value)">-->
+                            </div>
+                            <div class="btn-group product-size">
+                                <div id="div-unit" class="quantity">
+                                    <input type="number" min="0" max="9999" step="1" value="0" onclick="addAmount(this.value)">
                                 </div>
                             </div>
-                         </div>
+                            <div class="btn-group product-qty">
+                                <div class="quantity">
+                                    <button type="button" class="btn" onclick="addIngredient()">+</button>
+                                    <!--<a href="#" role="button"><i class="fas fa-fw fa-th" onclick="addIngredient()"></i></a>-->
+                                </div>
+                            </div>
+                        </div>
                         <!--</form>-->
                         <!--<div class="form-group">
                             <label for="textfield">Text field</label>
@@ -150,12 +157,40 @@
     <!-- ============================================================== -->
     <!-- end basic form  -->
     <!-- ============================================================== -->
+    <script src="{% static 'assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
     <script>
+/*
+    $(document).on('keyup', '.bs-searchbox input', function (e) {
+    var searchData = e.target.value;
+    console.log(searchData);
 
-    var chosenIngredient = {id:null, name:null};
-    var chosenAmount = 0;
+    //You can write the ajax code here
+});*/
 
-    function searchFoodItem(str) {
+    var chosenIngredient = {id:null, name:null, unit:null, amount:0};
+    //var chosenAmount = 0;
+
+    /*$('.selectpicker').on('change', function(){
+        console.log("ha");
+    var selected = []
+    selected = $('.selectpicker').val()
+    console.log(selected); //Get the multiple values selected in an array
+    console.log(selected.length); //Length of the array
+});
+        */
+/*
+$( ".selectpicker" ).bind( "keyup", function() {
+  console.log( "User clicked on 'foo.'" );
+});*/
+    /*$('.bs-searchbox').bind('keyup', function(){
+        console.log("hah");
+    });*/
+
+    //$('#livesearch').selectpicker('refresh');
+    $('#div-ingredient').on('keyup', function () {
+        $("#livesearch-ingredient").empty();
+        str = $('.bs-searchbox .form-control').val();
+        //console.log("str: ", str);
         if (str.length>0) {
             $.ajax({
                 url: "https://api.nal.usda.gov/fdc/v1/foods/search",
@@ -164,27 +199,86 @@
                 success: function(response) {
                     //var json = $.parseJSON(response);
                     //var options=json["foods"][0];
-                    chosenIngredient["id"] = response["foods"][0]["fdcId"];
-                    chosenIngredient["name"] = response["foods"][0]["description"];
-                    $("#livesearch").replaceWith(chosenIngredient);
+                    for(i = 0; i < response["foods"].length; i ++){
+                        //chosenIngredient["id"] = response["foods"][i]["fdcId"];
+                        //chosenIngredient["name"] = response["foods"][i]["description"];
+                        //console.log(chosenIngredient["id"]);
+                        //console.log(chosenIngredient["name"]);
+                        $('#livesearch-ingredient').append($('<option>', {
+                            //value: chosenIngredient["id"],
+                            //text: chosenIngredient["name"]
+                            value: response["foods"][i]["fdcId"],
+                            text: response["foods"][i]["description"]
+                        }));
+                        //$('#livesearch-ingredient').selectpicker('refresh');
+                    }
+                    $('#livesearch-ingredient').selectpicker('refresh');
+                    $('#livesearch-unit').selectpicker('refresh');
                 },
                 error: function(response) {
-                    chosenIngredient = null;
-                    $("#livesearch").replaceWith("Error: "+response);
+                    //chosenIngredient = null;
+                    $("#livesearch-ingredient").replaceWith("Error: "+response);
                 },
             });
         }
-    }
+
+        /*
+        $('#livesearch').append($('<option>', {
+            value: 'any value',
+            text: 'any text'
+        }));
+        $('#livesearch').selectpicker('refresh');*/
+    });
+
+    //$('#div-ingredient .dropdown.bootstrap-select.dropup .btn.dropdown-toggle.btn-light .filter .filter-option-inner').on('click', function () {
+    $('#div-ingredient').on('change', function () {
+        //chosenIngredient["id"] = $('#div-ingredient').val();
+        //chosenIngredient["name"] = $('#div-ingredient').text();s
+        chosenIngredient["id"] = $('#livesearch-ingredient :selected').val();
+        chosenIngredient["name"] = $('#livesearch-ingredient :selected').text();
+        chosenIngredient["unit"] = "";
+        //console.log(chosenIngredient["id"], ":", chosenIngredient["name"]);
+        $("#livesearch-unit").empty();
+        //console.log("str: ", str);
+        $.ajax({
+            url: "https://api.nal.usda.gov/fdc/v1/food/" + chosenIngredient["id"],
+            type: "get",
+            data: "api_key=uHpZNeQkPBjLCcnybhVSTcdzjXt6wgNohqA7gRQu",
+            success: function(response) {
+                //var json = $.parseJSON(response);
+                //var options=json["foods"][0];
+                for(i = 0; i < response["foodPortions"].length; i ++){
+                    $('#livesearch-unit').append($('<option>', {
+                        value: response["foodPortions"][i]["measureUnit"]["name"],
+                        text: response["foodPortions"][i]["measureUnit"]["name"]
+                    }));
+                    //$('#livesearch-ingredient').selectpicker('refresh');
+                }
+                $('#livesearch-unit').selectpicker('refresh');
+                chosenIngredient["unit"] = $('#livesearch-unit :selected').text();
+            },
+            error: function(response) {
+                $("#livesearch-unit").replaceWith("Error: "+response);
+            },
+        });
+    });
+
+    $('#div-unit').on('click', function () {
+        chosenIngredient["unit"] = $('#livesearch-unit :selected').text();
+        console.log(chosenIngredient["unit"]);
+    });
+
+    //onclick="addAmount(this.value)
 
     function addAmount(val) {
-        chosenAmount = val;
-        console.log(chosenIngredient, ":", chosenAmount);
+        chosenIngredient["amount"] = val;
+        console.log(chosenIngredient);
     }
 
     function addIngredient() {
-        console.log(chosenIngredient, ":", chosenAmount);
+        console.log(chosenIngredient);
         temp = $('#ingredients').val()
-        $('#ingredients').val(temp.concat(chosenIngredient["name"],"(", chosenIngredient["id"], ")", ":", chosenAmount, ";"));
+        $('#ingredients').val(temp.concat(chosenIngredient["name"],"(", chosenIngredient["id"], ")", ":" , chosenIngredient["unit"] , ":", chosenIngredient["amount"], ";"));
     }
     </script>
 

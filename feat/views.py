@@ -138,7 +138,7 @@ class RecipeCreateView(View, LoginRequiredMixin):
             # adapter: string -> ingredient model
             ingredients_input = form.cleaned_data.get('ingredients')
             #Ex: Tomatoes, grape, raw(321360):2;
-            pattern = r'([\w*(,\s)?]+)\(([0-9]*)\)\:([0-9]*)\;'
+            pattern = r'([\w*(,\s)?]+)\(([0-9]*)\)\:([\w*(,\s)?]+)\:([0-9]*)\;'
             r = re.compile(pattern)
             ingredients_list = r.findall(ingredients_input)
             #for i in ingredients_list:
@@ -156,28 +156,47 @@ class RecipeCreateView(View, LoginRequiredMixin):
             }
             for i in ingredients_list:
                 food_id = i[1]
-                quantity = int(i[2])
+                unit = i[2]
+                quantity = int(i[3])
                 url = "https://api.nal.usda.gov/fdc/v1/food/{}?api_key={}".format(food_id, api_key)
                 serialized_data = urlopen(url).read()
                 # check the response status
                 data = json.loads(serialized_data)
                 # check whether the fields accessed here exist in the first place
+                portions = data["foodPortions"]
+                for portion in portions:
+                    if portion["measureUnit"]["name"] == unit:
+                        weight = portion["gramWeight"]
                 nutrients = data["foodNutrients"]
                 for n in nutrients:
                     nutrient_name = n["nutrient"]["name"]
                     #nutrient_value = n["nutrient"]["rank"]
                     if nutrient_name in nutritional_value:
+                        # try:
+                        #     nutrient_value = n["amount"]
+                        #     nutrient_unit = n["nutrient"]["unitName"]
+                        #     # should kJ always be ignored? or is there a case in which only this is given instead of kcal?
+                        #     if nutrient_unit.lower() == "kj":
+                        #         continue
+                        #     nutrient_value = CookingConverter().to_standard(nutrient_value, nutrient_unit, nutrient_name)
+                        # except KeyError:
+                        #     print("Nutrient amount/unit: '", nutrient_name, "' could not be found for food item: '", food_id, "'.")
+                        #     nutrient_value = 0
+
                         try:
+                            # nutritional value per 100g
                             nutrient_value = n["amount"]
+
                             nutrient_unit = n["nutrient"]["unitName"]
                             # should kJ always be ignored? or is there a case in which only this is given instead of kcal?
                             if nutrient_unit.lower() == "kj":
                                 continue
-                            nutrient_value = CookingConverter().to_standard(nutrient_value, nutrient_unit, nutrient_name)
+
                         except KeyError:
                             print("Nutrient amount/unit: '", nutrient_name, "' could not be found for food item: '", food_id, "'.")
                             nutrient_value = 0
-                        nutritional_value[nutrient_name] += quantity * nutrient_value
+
+                        nutritional_value[nutrient_name] += quantity * weight * nutrient_value / 100
                 # for n in nutrients:
                 #     nutrient_name = n["nutrient"]["name"]
                 #     nutrient_value = n["nutrient"]["rank"]

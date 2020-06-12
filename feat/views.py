@@ -306,14 +306,7 @@ class MenuView(View, LoginRequiredMixin):
 class SearchRecipeView(View, LoginRequiredMixin):
     def get(self, request, contains=None):
         keyword = request.GET.get('contains', '')
-        print("Searching recipes containing: ", keyword)
         if keyword != '':
-            print("Second: searching recipes containing: ", keyword)
-            #recipe = Recipe.objects.all()[0]#filter(id=id)
-            #recipes_1 = Recipe.objects.filter(title__contains=contains)
-            #recipes_2 = Recipe.objects.filter(description__contains=contains)
-            #recipes_3 = Recipe.objects.filter(ingredients__contains=contains)
-            #recipes_4 = Recipe.objects.filter(instructions__contains=contains)
             recipes = Recipe.objects.filter(title__contains=keyword) |\
                      Recipe.objects.filter(description__contains=keyword) |\
                      Recipe.objects.filter(ingredients__contains=keyword) |\
@@ -322,3 +315,15 @@ class SearchRecipeView(View, LoginRequiredMixin):
             recipes = Recipe.objects.all()
 
         return render(request, "recipe-search-results.html", {'recipes': recipes, 'keyword': keyword})
+
+
+class SearchMenuView(View, LoginRequiredMixin):
+    def get(self, request, contains=None):
+        keyword = request.GET.get('contains', '')
+        if keyword != '':
+            menus = Menu.objects.filter(title__contains=keyword) |\
+                     Menu.objects.filter(description__contains=keyword)
+        else:
+            menus = Menu.objects.all()
+
+        return render(request, "menu-search-results.html", {'menus': menus, 'keyword': keyword})

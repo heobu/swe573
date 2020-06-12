@@ -33,7 +33,7 @@ urlpatterns = [
     path('logout', Logout.as_view(), name="logout"),
     path('change_password', ChangePasswordView.as_view(), name="change_password"),
     path('recipe/create', RecipeCreateView.as_view(), name="recipe_create"),
-    path('recipe/detail/<int:id>', RecipeView.as_view()),
+    path('recipe/detail/<int:id>', RecipeView.as_view(), name="recipe_view"),
     path('menu/create', MenuCreateView.as_view(), name="menu_create"),
     path('menu/detail/<int:id>', MenuView.as_view()),
     #path('search/recipe/(?P<contains>\w{0,50})/$', SearchRecipeView.as_view(), name="search_recipe"),

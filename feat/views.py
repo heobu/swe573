@@ -301,3 +301,23 @@ class MenuView(View, LoginRequiredMixin):
         #recipe = Recipe.objects.all()[0]#filter(id=id)
         menu = Menu.objects.get(id=id)
         return render(request, "menu-detail.html", {'menu': menu})
+
+
+class SearchRecipeView(View, LoginRequiredMixin):
+    def get(self, request, contains=None):
+        contains = request.GET.get('contains')
+        if contains != None:
+            print("Searching recipes containing: ", contains)
+            #recipe = Recipe.objects.all()[0]#filter(id=id)
+            #recipes_1 = Recipe.objects.filter(title__contains=contains)
+            #recipes_2 = Recipe.objects.filter(description__contains=contains)
+            #recipes_3 = Recipe.objects.filter(ingredients__contains=contains)
+            #recipes_4 = Recipe.objects.filter(instructions__contains=contains)
+            recipes = Recipe.objects.filter(title__contains=contains) |\
+                     Recipe.objects.filter(description__contains=contains) |\
+                     Recipe.objects.filter(ingredients__contains=contains) |\
+                     Recipe.objects.filter(instructions__contains=contains)
+        else:
+            recipes = Recipe.objects.all()
+
+        return render(request, "recipe-search-results.html", {'recipes': recipes})

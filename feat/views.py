@@ -13,11 +13,26 @@ import json
 from feat.converter.converter import CookingConverter
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
     CreateRecipeForm, CreateMenuForm, CommentForm
-from feat.models import Recipe, Menu, Comment
+from feat.models import Recipe, Menu, Comment, RecipeLike, MenuLike
 
 
 class HomeView(TemplateView):
-    template_name = "index.html"
+    def get_rec(self, recipe):
+        print(recipe.get_like_count())
+        print("hey")
+
+    #template_name = "index.html"
+    def get(self, request):
+        most_liked = []
+        most_viewed_recipes = Recipe.objects.filter(view_number__gt=0).order_by('view_number').reverse()[:3]
+        #most_liked_recipes = Recipe.objects.complex_filter(RecipeLike.objects.filter())filter(view_number__gt=0).order_by('view_number').reverse()[:3]
+        #most_liked_recipes = Recipe.objects.all().order_by('recipelike__cprofiles__recipelike').reverse()[:3]
+        most_liked_recipes = sorted(Recipe.objects.filter(), key=lambda a: a.get_like_count(), reverse=True)[:3]
+        #most_liked_recipes = Recipe.objects.filter().order_by('recipelike__cprofiles__recipelike').reverse()[:3]
+        most_viewed_menus = Menu.objects.filter(view_number__gt=0).order_by('view_number').reverse()[:3]
+        #most_liked_recipes = Menu.objects.all().order_by('menulike__cprofiles__menulike').reverse()[:3]
+        most_liked_menus = sorted(Menu.objects.filter(), key=lambda a: a.get_like_count(), reverse=True)[:3]
+        return render(request, "index.html", {'most_viewed_recipes': most_viewed_recipes, 'most_liked_recipes': most_liked_recipes, 'most_viewed_menus': most_viewed_menus, 'most_liked_menus': most_liked_menus})
 
 
 class UserHomeView(LoginRequiredMixin, TemplateView):
@@ -123,7 +138,7 @@ class RegisterAsProviderView(View):
         else:
             return redirect('pages/sign-up.html')
 
-class RecipeCreateView(View, LoginRequiredMixin):
+class RecipeCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         form = CreateRecipeForm()
@@ -227,10 +242,11 @@ class RecipeCreateView(View, LoginRequiredMixin):
         else:
             return render('create-recipe')
 
-class RecipeView(View, LoginRequiredMixin):
+class RecipeView(LoginRequiredMixin, View):
     def get(self, request, id=None):
         #recipe = Recipe.objects.all()[0]#filter(id=id)
         recipe = Recipe.objects.get(id=id)
+        recipe.increase_view_number()
         form = CommentForm()
         return render(request, "recipe-detail.html", {'recipe': recipe, 'form': form})
 
@@ -250,7 +266,7 @@ class RecipeView(View, LoginRequiredMixin):
 
 
 
-class MenuCreateView(View, LoginRequiredMixin):
+class MenuCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         form = CreateMenuForm()
@@ -302,14 +318,15 @@ class MenuCreateView(View, LoginRequiredMixin):
         else:
             return render('create-menu')
 
-class MenuView(View, LoginRequiredMixin):
+class MenuView(LoginRequiredMixin, View):
     def get(self, request, id=None):
         #recipe = Recipe.objects.all()[0]#filter(id=id)
         menu = Menu.objects.get(id=id)
+        menu.increase_view_number()
         return render(request, "menu-detail.html", {'menu': menu})
 
 
-class SearchRecipeView(View, LoginRequiredMixin):
+class SearchRecipeView(LoginRequiredMixin, View):
     def get(self, request, contains=None):
         keyword = request.GET.get('contains', '')
         if keyword != '':
@@ -323,7 +340,7 @@ class SearchRecipeView(View, LoginRequiredMixin):
         return render(request, "recipe-search-results.html", {'recipes': recipes, 'keyword': keyword})
 
 
-class SearchMenuView(View, LoginRequiredMixin):
+class SearchMenuView(LoginRequiredMixin, View):
     def get(self, request, contains=None):
         keyword = request.GET.get('contains', '')
         if keyword != '':

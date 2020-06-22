@@ -57,9 +57,17 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(null=False)
     prepared_in = models.IntegerField(null=False)
+    view_number = models.IntegerField(null=False, default=0)
 
     def get_like_count(self):
         return self.recipelike.cprofiles.count()
+
+    def get_view_number(self):
+        return self.view_number
+
+    def increase_view_number(self):
+        self.view_number = self.view_number + 1
+        self.save()
 
 
 @receiver(post_save, sender=Recipe)
@@ -89,6 +97,7 @@ class Menu(models.Model):
     image_link = models.URLField(max_length=300, null=False, blank=False, default="https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="menu_creator")
     created_at = models.DateTimeField(auto_now_add=True)
+    view_number = models.IntegerField(null=False, default=0)
 
     def set_food_items(self, food_items):
         self.food_items = json.dumps(food_items)
@@ -98,6 +107,13 @@ class Menu(models.Model):
 
     def get_like_count(self):
         return self.menulike.cprofiles.count()
+
+    def get_view_number(self):
+        return self.view_number
+
+    def increase_view_number(self):
+        self.view_number = self.view_number + 1
+        self.save()
 
 
 @receiver(post_save, sender=Menu)

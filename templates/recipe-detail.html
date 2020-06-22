@@ -245,42 +245,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-b-10">
-                    <h3> Recommended Recipes</h3>
-                </div>
-                {% for recommended in recommendations %}
-                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                        <div class="product-thumbnail">
-                            <div class="product-img-head">
-                                <div class="product-img">
-                                    <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
-                                <div class="ribbons">New</div>
-                                <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
-                            </div>
-                            <div class="product-content">
-                                <div class="product-content-head">
-                                    <h3 class="product-title">{{ recommended.title }}</h3>
-                                    <div class="product-rating d-inline-block">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                    </div>
-                                    <div class="product-price">x kcal</div>
-                                </div>
-                                <div class="product-btn">
-                                    <a href="#" class="btn btn-primary">Details</a>
-                                    <!-- If the user is the creator of the recipe. -->
-                                    <a href="#" class="btn btn-outline-light">Edit</a>
-                                    <a href="#" class="btn btn-outline-light"><i class="fas fa-exchange-alt"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
         </div>
     </div>
 

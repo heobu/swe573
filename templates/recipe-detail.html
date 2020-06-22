@@ -142,11 +142,19 @@
                                 <div class="product-content-head">
                                     <div class="product-rating d-inline-block">
                                         <h3 class="product-title">Ingredients</h3>
+                                        <p>name: quantity, unit</p>
                                     </div>
                                     <div class="product-price">
                                         <i class="fas fa-edit" onclick="editRecipe('ingredients')"></i>
                                     </div>
-                                    <p>{{ recipe.ingredients }}</p>
+                                    <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="ingredient-items">
+                                        {% for ingredient in recipe.ingredients|split_ingredients %}
+                                            <li class="list-group-item align-items-center drag-handle">
+                                                <span class="drag-indicator"></span>
+                                                <div> {{ ingredient|first }}: {{ ingredient|third }}, {{ ingredient|fourth }}</div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                                 <div class="product-content-head">
                                     <div class="product-rating d-inline-block">
@@ -180,7 +188,18 @@
                                         <h3 class="product-title">NutritionalValue</h3>
                                     </div>
                                     <!-- Energy: kcal, Otw: g -->
-                                    <p>{{ recipe.nutritional_value }}</p>
+                                    <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="ingredient-items">
+                                        <li class="list-group-item align-items-center drag-handle">
+                                            <span class="drag-indicator"></span>
+                                            <div> Energy: {{ recipe.nutritional_value|filter_nutritional_value:'Energy' }} kcal</div>
+                                            <div> Protein: {{ recipe.nutritional_value|filter_nutritional_value:'Protein' }} g</div>
+                                            <div> Carbohydrates: {{ recipe.nutritional_value|filter_nutritional_value:'Carbohydrates' }} g</div>
+                                            <div> Total lipid (fat): {{ recipe.nutritional_value|filter_nutritional_value:'Total lipid (fat)' }} g</div>
+                                            <div> Minerals: {{ recipe.nutritional_value|filter_nutritional_value:'Minerals' }} g</div>
+                                            <div> Vitamins and Other Components: {{ recipe.nutritional_value|filter_nutritional_value:'Vitamins and Other Components' }} g</div>
+                                            <div> Water: {{ recipe.nutritional_value|filter_nutritional_value:'Water' }} g</div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="product-tab-2">

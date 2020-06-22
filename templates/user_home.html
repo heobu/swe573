@@ -16,7 +16,7 @@
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Consumer Profile</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Consumer Homepage</li>
                                 </ol>
                             </nav>
                         </div>
@@ -46,7 +46,7 @@
                                 <a class="nav-link" id="pills-menus-tab" data-toggle="pill" href="#pills-menus" role="tab" aria-controls="pills-menus" aria-selected="true">My Menus</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-campaign-tab" data-toggle="pill" href="#pills-campaign" role="tab" aria-controls="pills-campaign" aria-selected="true">Likes</a>
+                                <a class="nav-link" id="pills-campaign-tab" data-toggle="pill" href="#pills-campaign" role="tab" aria-controls="pills-campaign" aria-selected="true">Liked Recipes</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-selected="false">Following</a>
@@ -68,7 +68,7 @@
                                                     <div class="product-thumbnail">
                                                         <div class="product-img-head">
                                                             <div class="product-img">
-                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                                <img src={{ post.image_link }} alt="" class="img-fluid"></div>
                                                         {% comment %}
                                                             {% if post.recent %}
                                                                 <div class="ribbons"></div>
@@ -116,7 +116,7 @@
                                                     <div class="product-thumbnail">
                                                         <div class="product-img-head">
                                                             <div class="product-img">
-                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                                <img src="{{ post.image_link }}" alt="" class="img-fluid"></div>
                                                         {% comment %}
                                                             {% if post.recent %}
                                                                 <div class="ribbons"></div>
@@ -169,7 +169,7 @@
                                                     <div class="product-thumbnail">
                                                         <div class="product-img-head">
                                                             <div class="product-img">
-                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                                <img src="{{ like.image_link }}" alt="" class="img-fluid"></div>
                                                         {% comment %}
                                                             {% if post.recent %}
                                                                 <div class="ribbons"></div>
@@ -203,7 +203,7 @@
                                                     <div class="product-thumbnail">
                                                         <div class="product-img-head">
                                                             <div class="product-img">
-                                                                <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
+                                                                <img src="{{ like.image_link }}" alt="" class="img-fluid"></div>
                                                         {% comment %}
                                                             {% if post.recent %}
                                                                 <div class="ribbons"></div>

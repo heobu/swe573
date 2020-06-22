@@ -19,11 +19,14 @@
                         {{ form.non_field_errors }}
                         {% for field, obj in form.fields.items %}
                             <div class="form-group">
-                                <label for="{{ field }}" class="col-form-label">{{ field }}</label>
                                 {% if obj.widget.input_type == "text"  %}
+                                    <label for="{{ field }}" class="col-form-label">{{ field }}</label>
                                     <!-- required? -->
                                     <textarea required="" class="form-control" name="{{ field }}"></textarea>
+                                {% elif field == "ingredients" %}
+                                    <input id="{{ field }}" type="{{ obj.widget.input_type }}" class="form-control" name="{{ field }}" hidden>
                                 {% else  %}
+                                    <label for="{{ field }}" class="col-form-label">{{ field }}</label>
                                     <input id="{{ field }}" type="{{ obj.widget.input_type }}" class="form-control" name="{{ field }}">
                             <!--<div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="float-xl-right float-none mt-xl-0 mt-4">
@@ -33,6 +36,13 @@
                                 {% endif %}
                             </div>
                         {% endfor %}
+                        <!--<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 co-12">-->
+                            <section class="card card-fluid">
+                                <h5 class="card-header drag-handle"> Ingredients List </h5>
+                                <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="ingredient-items">
+                                </ul>
+                            </section>
+                        <!--</div>-->
                         <!--<form>-->
                     <!--<div class="product-size border-bottom">
                         <div class="row">
@@ -268,6 +278,10 @@ $( ".selectpicker" ).bind( "keyup", function() {
         console.log(chosenIngredient["unit"]);
     });
 
+    /*$('i').on('click', function () {
+        console.log("remove id " + id);
+    });*/
+
     //onclick="addAmount(this.value)
 
     function addAmount(val) {
@@ -275,11 +289,49 @@ $( ".selectpicker" ).bind( "keyup", function() {
         console.log(chosenIngredient);
     }
 
+    /*
+    <li class="list-group-item align-items-center drag-handle">
+        <!--<span class="drag-indicator"></span>-->
+        <div> Item one </div>
+        <div class="btn-group ml-auto">
+            <button class="btn btn-sm btn-outline-light">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
+    </li>
+     */
+    //<ul class="sortable-lists list-group list-group-flush list-group-bordered" id="ingredient-items">
     function addIngredient() {
         console.log(chosenIngredient);
         temp = $('#ingredients').val()
         $('#ingredients').val(temp.concat(chosenIngredient["name"],"(", chosenIngredient["id"], ")", ":" , chosenIngredient["unit"] , ":", chosenIngredient["amount"], ";"));
+        ing_id = chosenIngredient["id"];
+        ing_name = chosenIngredient["name"];
+        unit = chosenIngredient["unit"];
+        amount = chosenIngredient["amount"]
+        $('#ingredient-items').append("<li id='" + ing_id + "' class='list-group-item align-items-center drag-handle'><span class='drag-indicator'></span><div>"+ ing_name + ": " + amount + " " + unit + "</div><div class='btn-group ml-auto'><button class='btn btn-sm btn-outline-light'><i class='far fa-trash-alt' id='`${ing_id}`' onclick='removeIngredient(\"" + ing_name + "\", \"" + ing_id + "\", \"" + unit + "\", \"" + amount + "\")'></i></button></div></li>");
+        //$('#ingredient-items').append("<li id='" + ing_id + "' class='list-group-item align-items-center drag-handle'><span class='drag-indicator'></span><div>"+ ing_name + ": " + amount + " " + unit + "</div><div class='btn-group ml-auto'><button class='btn btn-sm btn-outline-light'><i class='far fa-trash-alt' id='`${ing_id}`'></i></button></div></li>");
     }
+
+    function removeIngredient(name, id, unit, amount) {
+        console.log("remove name" + name + "(" + id + ")" + ":" + unit + ":" + amount + ";");
+        //temp =
+        /*$('#ingredients').val(function(i, v) {
+            v.replace(name + "(" + id + ")" + ":" + unit + ":" + amount + ";", "");
+        }).val();*/
+        temp = $('#ingredients').val();
+        console.log("temp: ", temp);
+        new_temp = temp.replace(name + "(" + id + ")" + ":" + unit + ":" + amount + ";", "");
+        //temp.replace(/$name\(id\):unit:amount;/gi, "");
+        console.log("new temp: ", new_temp);
+        $('#ingredients').val(new_temp);
+        //child = $('#' + chosenIngredient["id"]);
+        //$('#ingredient-items').remove("<li id='" + chosenIngredient["id"] + "' class='list-group-item align-items-center drag-handle'></li>");
+        //$('#ingredient-items').remove(child);
+        //console.log("li: ", $('li #id'));
+        $('li').remove('#' + id);
+    }
+
     </script>
 
 {% endblock %}

@@ -47,11 +47,12 @@ def save_user_profile(sender, instance, **kwargs):
 class Recipe(models.Model):
     print('rrrr')
     title = models.TextField(max_length=40, null=False)
-    ingredients = models.TextField(max_length=100, null=False)
+    ingredients = models.TextField(max_length=10000, null=False)
     nutritional_value = models.TextField(max_length=1000, null=False)
-    description = models.TextField(max_length=300, null=False)
-    instructions = models.TextField(max_length=300, null=False)
+    description = models.TextField(max_length=3000, null=False)
+    instructions = models.TextField(max_length=3000, null=False)
     # picture (optional)
+    image_link = models.URLField(max_length=300, null=False, blank=False, default="https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="recipe_creator")
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(null=False)
@@ -85,6 +86,7 @@ class Menu(models.Model):
     description = models.TextField(max_length=300, null=False)
     food_items = models.CharField(max_length=300)
     nutritional_value = models.TextField(max_length=1000, null=False)
+    image_link = models.URLField(max_length=300, null=False, blank=False, default="https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="menu_creator")
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -42,16 +42,19 @@ class RegisterAsProviderForm(UserCreationForm):
 
 class CreateRecipeForm(forms.ModelForm):
     description = forms.CharField(widget=forms.TextInput())
+    image_link = forms.URLField(required=False)
 
     class Meta:
         model = Recipe
-        fields = ('title', 'ingredients', 'description', 'instructions', 'difficulty', 'prepared_in')
+        fields = ('title', 'ingredients', 'description', 'instructions', 'difficulty', 'prepared_in', 'image_link')
 
 
 class CreateMenuForm(forms.ModelForm):
+    image_link = forms.URLField(required=False)
+
     class Meta:
         model = Menu
-        fields = ('title', 'description', 'food_items')
+        fields = ('title', 'description', 'food_items', 'image_link')
 
 class CommentForm(forms.ModelForm):
     class Meta:

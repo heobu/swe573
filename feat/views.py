@@ -218,8 +218,11 @@ class RecipeCreateView(View, LoginRequiredMixin):
             instructions = form.cleaned_data.get('instructions')
             difficulty = form.cleaned_data.get('difficulty')
             prepared_in = form.cleaned_data.get('prepared_in')
+            image_link = form.cleaned_data.get('image_link')
+            if image_link == "":
+                image_link = "https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg"
             #form.save(commit=True)
-            Recipe.objects.create(created_by=created_by, title=title, ingredients=ingredients_input, nutritional_value=nutritional_value, description=description, instructions=instructions, difficulty=difficulty, prepared_in=prepared_in)
+            Recipe.objects.create(created_by=created_by, title=title, ingredients=ingredients_input, nutritional_value=nutritional_value, description=description, instructions=instructions, difficulty=difficulty, prepared_in=prepared_in, image_link=image_link)
             return redirect('user_home')
         else:
             return render('create-recipe')
@@ -260,6 +263,7 @@ class MenuCreateView(View, LoginRequiredMixin):
             created_by = request.user
             title = form.cleaned_data.get('title')
             description = form.cleaned_data.get('description')
+            image_link = form.cleaned_data.get('image_link')
 
             # adapter: string -> ingredient model
             food_items_input = form.cleaned_data.get('food_items')
@@ -291,7 +295,9 @@ class MenuCreateView(View, LoginRequiredMixin):
                         menu_nutritional_value[nutrient_name] += quantity * nutrient_value
 
             #form.save(commit=True)
-            Menu.objects.create(created_by=created_by, title=title, description=description, food_items=food_items, nutritional_value=menu_nutritional_value)
+            if image_link == "":
+                image_link = "https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg"
+            Menu.objects.create(created_by=created_by, title=title, description=description, food_items=food_items, nutritional_value=menu_nutritional_value, image_link=image_link)
             return redirect('user_home')
         else:
             return render('create-menu')

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from feat.models import ConsumerProfile, ProviderProfile, Recipe, Menu
+from feat.models import ConsumerProfile, ProviderProfile, Recipe, Menu, RecipeLike, MenuLike, DailyIntakeFromRecipe
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,10 +25,28 @@ class ProviderProfileSerializer(serializers.HyperlinkedModelSerializer):
 class RecipeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
-        #fields = ('title', 'ingredients', 'description', 'created_by', 'created_at', 'difficulty', 'prepared_in')
-        fields = ('title', 'ingredients', 'description', 'difficulty', 'prepared_in')
+        fields = ('title', 'ingredients', 'description', 'instructions', 'difficulty', 'prepared_in')
+
 
 class MenuSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Menu
-        fields = ('title', 'food_items', 'nutritional_value', 'created_at')
+        fields = ('title', 'description', 'food_items', 'nutritional_value', 'created_at')
+
+
+class RecipeLikeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = RecipeLike
+        fields = ('recipe', 'cprofiles')
+
+
+class MenuLikeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = MenuLike
+        fields = ('menu', 'cprofiles')
+
+
+class DailyIntakeFromRecipeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = DailyIntakeFromRecipe
+        fields = ('intake_at',)

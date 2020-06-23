@@ -13,7 +13,7 @@
                 <div class="page-breadcrumb">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">E-coommerce</a></li>
+                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Recipe</li>
                         </ol>
                     </nav>
@@ -32,18 +32,10 @@
                         <div id="productslider-1" class="product-carousel carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
                                 <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                             </ol>
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img class="d-block" src="{% static 'assets/images/eco-slider-img-1.png' %}" alt="First slide">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="d-block" src="{% static 'assets/images/eco-slider-img-2.png' %}" alt="Second slide">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="d-block" src="{% static 'assets/images/eco-slider-img-3.png' %}" alt="Third slide">
+                                    <img class="d-block" src="{{ recipe.image_link }}" alt="First slide">
                                 </div>
                             </div>
                             <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -88,22 +80,64 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="product-size border-bottom">
+                        <div class="product-colors border-bottom">
+                            <h4>Liked by</h4>
+                            <div class="product-rating d-inline-block">
+                                <i class="fas fa-people-carry">{{ recipe.get_like_count }} member(s)</i>
+                            </div>
+                        </div>
+                        <div class="product-colors border-bottom">
+                            <h4>Viewed</h4>
+                            <div class="product-rating d-inline-block">
+                                <i class="fas fa-people-carry">{{ recipe.get_view_number }} time(s)</i>
+                            </div>
+                        </div>
+                        <!--<div class="product-size border-bottom">
                             <h3 class="font-16">Tags</h3>
                             <div>
                                 <a href="#" class="badge badge-light mr-1">tag1</a><a href="#" class="badge badge-light mr-1">tag2</a><a href="#" class="badge badge-light mr-1">tag3</a>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="product-description border-bottom">
                             <h4 class="mb-1">Creator</h4>
                             <p>{{ recipe.created_by.username }}</p>
                         </div>
                         <div class="product-btn">
                             <div class="product-rating d-inline-block">
-                                <a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-primary"><i class="fas fa-tag"></i></a>
-                                <a href="#" class="btn btn-outline-light">Add to Menu</a>
-                                <a href="#" class="btn btn-danger"><i class="fas fa-ban"></i></a>
+                                <!--<a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>-->
+                                {% if user.is_consumer %}
+                                    {% if user.consumer_profile in recipe.recipelike.cprofiles.all %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-paint-brush" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                    {% else %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-heart" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                    {% endif %}
+                                {% elif user.is_provider %}
+                                    {% if user.provider_profile in recipe.recipelike.cprofiles.all %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-paint-brush" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                    {% else %}
+                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-heart" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                    {% endif %}
+                                {% else %}
+                                    <!-- Other types of users? Such as Admmin... -->
+                                {% endif %}
+                                <form method="post" id="daily-intake-form">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="offset-xl-3 col-xl-6 offset-lg-3 col-lg-3 col-md-12 col-sm-12 col-12 p-4">
+                                            <div class="form-group">
+                                                <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" name="intake_at" data-target="#datetimepicker4" />
+                                                    <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--<a href= class="btn btn-outline-light">Add to Daily Intake</a>-->
+                                            <button type="submit" class="btn btn-primary float-right" onclick="addDailyIntake({{ recipe.id }})">Add to Daily Intake</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- <a href="#" class="btn btn-danger"><i class="fas fa-ban"></i></a> -->
                             </div>
                         </div>
                     </div>
@@ -126,11 +160,19 @@
                                 <div class="product-content-head">
                                     <div class="product-rating d-inline-block">
                                         <h3 class="product-title">Ingredients</h3>
+                                        <p>name: quantity, unit</p>
                                     </div>
                                     <div class="product-price">
                                         <i class="fas fa-edit" onclick="editRecipe('ingredients')"></i>
                                     </div>
-                                    <p>{{ recipe.ingredients }}</p>
+                                    <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="ingredient-items">
+                                        {% for ingredient in recipe.ingredients|split_ingredients %}
+                                            <li class="list-group-item align-items-center drag-handle">
+                                                <span class="drag-indicator"></span>
+                                                <div> {{ ingredient|first }}: {{ ingredient|third }}, {{ ingredient|fourth }}</div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                                 <div class="product-content-head">
                                     <div class="product-rating d-inline-block">
@@ -140,11 +182,22 @@
                                         <i class="fas fa-edit" onclick="editRecipe('description')"></i>
                                     </div>
                                     <p>{{ recipe.description }}</p>
+                                </div>
+                                <div class="product-content-head">
+                                    <div class="product-rating d-inline-block">
+                                        <h3 class="product-title">Instructions</h3>
+                                    </div>
+                                    <div class="product-price">
+                                        <i class="fas fa-edit" onclick="editRecipe('instructions')"></i>
+                                    </div>
+                                    <p>{{ recipe.instructions }}</p>
+                                    {% comment %}
                                     <ul class="list-unstyled arrow">
-                                        {% for step in recipe.steps %}
-                                            <li>{{ step }}</li>
+                                        {% for instruction in recipe.instructions %}
+                                            <li>{{ instruction }}</li>
                                         {% endfor %}
                                     </ul>
+                                    {% endcomment %}
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab-nv" role="tabpanel" aria-labelledby="product-tab-nv">
@@ -152,86 +205,73 @@
                                     <div class="product-rating d-inline-block">
                                         <h3 class="product-title">NutritionalValue</h3>
                                     </div>
-                                    <p>{{ recipe.nutritional_value }}</p>
+                                    <!-- Energy: kcal, Otw: g -->
+                                    <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="ingredient-items">
+                                        <li class="list-group-item align-items-center drag-handle">
+                                            <span class="drag-indicator"></span>
+                                            <div> Energy: {{ recipe.nutritional_value|filter_nutritional_value:'Energy' }} kcal</div>
+                                            <div> Protein: {{ recipe.nutritional_value|filter_nutritional_value:'Protein' }} g</div>
+                                            <div> Carbohydrates: {{ recipe.nutritional_value|filter_nutritional_value:'Carbohydrates' }} g</div>
+                                            <div> Total lipid (fat): {{ recipe.nutritional_value|filter_nutritional_value:'Total lipid (fat)' }} g</div>
+                                            <div> Minerals: {{ recipe.nutritional_value|filter_nutritional_value:'Minerals' }} g</div>
+                                            <div> Vitamins and Other Components: {{ recipe.nutritional_value|filter_nutritional_value:'Vitamins and Other Components' }} g</div>
+                                            <div> Water: {{ recipe.nutritional_value|filter_nutritional_value:'Water' }} g</div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="product-tab-2">
-                                <div class="review-block">
-                                    <p class="review-text font-italic m-0">“Vestibulum cursus felis vel arcu convallis, viverra commodo felis bibendum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin non auctor est, sed lacinia velit. Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus mus.”</p>
-                                    <div class="rating-star mb-4">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
+                                <div class="card">
+                                    <h5 class="card-header">Comment</h5>
+                                    <div class="card-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="offset-xl-3 col-xl-6 offset-lg-3 col-lg-3 col-md-12 col-sm-12 col-12 p-4">
+                                                    <div class="form-group">
+                                                        <!--<label for="messages">Comment</label>-->
+                                                        <textarea class="form-control" name="content" id="content" rows="3"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary float-right">Submit</button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <span class="text-dark font-weight-bold">Virgina G. Lightfoot</span><small class="text-mute"> (Company name)</small>
                                 </div>
-                                <div class="review-block border-top mt-3 pt-3">
-                                    <p class="review-text font-italic m-0">“Integer pretium laoreet mi ultrices tincidunt. Suspendisse eget risus nec sapien malesuada ullamcorper eu ac sapien. Maecenas nulla orci, varius ac tincidunt non, ornare a sem. Aliquam sed massa volutpat, aliquet nibh sit amet, tincidunt ex. Donec interdum pharetra dignissim.”</p>
-                                    <div class="rating-star mb-4">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                    </div>
-                                    <span class="text-dark font-weight-bold">Ruby B. Matheny</span><small class="text-mute"> (Company name)</small>
-                                </div>
-                                <div class="review-block  border-top mt-3 pt-3">
-                                    <p class="review-text font-italic m-0">“ Cras non rutrum neque. Sed lacinia ex elit, vel viverra nisl faucibus eu. Aenean faucibus neque vestibulum condimentum maximus. In id porttitor nisi. Quisque sit amet commodo arcu, cursus pharetra elit. Nam tincidunt lobortis augueat euismod ante sodales non. ”</p>
-                                    <div class="rating-star mb-4">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                    </div>
-                                    <span class="text-dark font-weight-bold">Gloria S. Castillo</span><small class="text-mute"> (Company name)</small>
-                                </div>
+                                {% for comment in recipe.comment.all %}
+                                    {% if comment.is_deleted == False %}
+                                        <div class="card">
+                                            <h6 class="card-header"><span class="text-dark font-weight-bold">{{ comment.created_by }}</span><small class="text-mute"> {{ comment.created_at }} </small></h6>
+                                            <div class="card-body">
+                                                <div class="review-block">
+                                                    <p class="review-text font-italic m-0" id="comment{{ comment.id }}">{{ comment.content }}</p>
+                                                    <!--<div class="product-btn">
+                                                        If the user is the author of the comment.
+                                                        <a href="#" class="btn btn-outline-light">Edit</a>
+                                                        <a href="#" class="btn btn-primary">Report</a>
+                                                    </div>-->
+                                                </div>
+                                                <div class="product-wishlist-btn">
+                                                    <i class="fas fa-edit" onclick="editComment('{{ comment.id }}', '{{ comment.content }}')"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-b-10">
-                    <h3> Recommended Recipes</h3>
-                </div>
-                {% for recommended in recommendations %}
-                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                        <div class="product-thumbnail">
-                            <div class="product-img-head">
-                                <div class="product-img">
-                                    <img src="{% static 'assets/images/eco-product-img-1.png' %}" alt="" class="img-fluid"></div>
-                                <div class="ribbons">New</div>
-                                <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
-                            </div>
-                            <div class="product-content">
-                                <div class="product-content-head">
-                                    <h3 class="product-title">{{ recommended.title }}</h3>
-                                    <div class="product-rating d-inline-block">
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                        <i class="fa fa-fw fa-star"></i>
-                                    </div>
-                                    <div class="product-price">x kcal</div>
-                                </div>
-                                <div class="product-btn">
-                                    <a href="#" class="btn btn-primary">Details</a>
-                                    <!-- If the user is the creator of the recipe. -->
-                                    <a href="#" class="btn btn-outline-light">Edit</a>
-                                    <a href="#" class="btn btn-outline-light"><i class="fas fa-exchange-alt"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
             </div>
         </div>
     </div>
+        <script src="{% static 'assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+        <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+        <script src="{% static 'assets/vendor/slimscroll/jquery.slimscroll.js' %}"></script>
+        <script src="{% static 'assets/libs/js/main-js.js' %}"></script>
+        <script src="{% static 'assets/vendor/datepicker/moment.js' %}"></script>
+        <script src="{% static 'assets/vendor/datepicker/tempusdominus-bootstrap-4.js' %}"></script>
+        <script src="{% static 'assets/vendor/datepicker/datepicker.js' %}"></script>
 
         <!-- Optional JavaScript -->
         <!-- jquery 3.3.1 -->
@@ -243,7 +283,44 @@
         <!-- main js -->
         <script src="{% static 'assets/libs/js/main-js.js' %}"></script>
 
-        <script>function editRecipe() {
+        <script>
+
+        function addDailyIntake (recipe_id){
+            $.ajax({
+                url:'/api/update/daily/' + recipe_id + '/recipe/',
+                type:'post',
+                data:$('#daily-intake-form').serialize(),
+                success:function(){
+                    alert("worked");
+                }
+            });
+        }
+
+        function editComment(comment_id, content) {
+            console.log("edit comment");
+            if (comment_id>=0) {
+                $("#comment"+comment_id).replaceWith('<textarea class="review-text font-italic m-0" id="comment' + comment_id + ' name="comment">' + content + '</textarea>');
+            }
+        }
+
+        function toggleRecipeLike(recipe_id) {
+            console.log("toggle recipe like");
+            if (recipe_id>=0) {
+                $.ajax({
+                    url: "http://localhost:8000/api/like/recipe/" + recipe_id + "/toggle",
+                    type: "get",
+                    data: "",
+                    success: function(response) {
+                        $("#recipe-like").toggleClass("fas fa-heart").toggleClass("fas fa-paint-brush");
+                    },
+                    error: function(response) {
+                        console.log("error");
+                    },
+                });
+            }
+        }
+
+        function editRecipe() {
             console.log("edit recipe")
         }
 

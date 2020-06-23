@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load recipe_filter %}
 {% block content %}
     <div class="influence-profile">
         <div class="container-fluid dashboard-content ">
@@ -9,13 +10,13 @@
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="page-header">
-                        <h3 class="mb-2">Consumer Profile </h3>
+                        <h3 class="mb-2">Profile </h3>
                         <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
                         <div class="page-breadcrumb">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Consumer Profile</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
                                 </ol>
                             </nav>
                         </div>
@@ -38,53 +39,28 @@
                     <!-- ============================================================== -->
                     <div class="card">
                         <div class="card-body">
-                            <div class="user-avatar text-center d-block">
-                                <img src="{% static 'assets/images/avatar-1.jpg' %}" alt="User Avatar" class="rounded-circle user-avatar-xxl">
-                            </div>
-                            <div class="text-center">
-                                <h2 class="font-24 mb-0">{{ user.first_name }} {{ user.last_name }}</h2>
-                                <p>{{ user.username }}</p>
-                            </div>
-                        </div>
-                        <div class="card-body border-top">
                             <h3 class="font-16">Contact Information</h3>
                             <div class="">
                                 <ul class="list-unstyled mb-0">
                                 <li class="mb-2"><i class="fas fa-fw fa-envelope mr-2"></i>{{ user.email }}</li>
-                                <li class="mb-0"><i class="fas fa-fw fa-phone mr-2"></i>(900) 123 4567</li>
                             </ul>
                             </div>
                         </div>
                         <div class="card-body border-top">
-                            <h3 class="font-16">Rating</h3>
-                            <h1 class="mb-0">4.8</h1>
-                            <div class="rating-star">
-                                <i class="fa fa-fw fa-star"></i>
-                                <i class="fa fa-fw fa-star"></i>
-                                <i class="fa fa-fw fa-star"></i>
-                                <i class="fa fa-fw fa-star"></i>
-                                <i class="fa fa-fw fa-star"></i>
-                                <p class="d-inline-block text-dark">14 Reviews </p>
-                            </div>
-                        </div>
-                        <div class="card-body border-top">
-                            <h3 class="font-16">Social Channels</h3>
+                            <h3 class="font-16">Date of Birth</h3>
                             <div class="">
-                                <ul class="mb-0 list-unstyled">
-                                <li class="mb-1"><a href="#"><i class="fab fa-fw fa-facebook-square mr-1 facebook-color"></i>fb.me/michaelchristy</a></li>
-                                <li class="mb-1"><a href="#"><i class="fab fa-fw fa-twitter-square mr-1 twitter-color"></i>twitter.com/michaelchristy</a></li>
-                                <li class="mb-1"><a href="#"><i class="fab fa-fw fa-instagram mr-1 instagram-color"></i>instagram.com/michaelchristy</a></li>
-                                <li class="mb-1"><a href="#"><i class="fas fa-fw fa-rss-square mr-1 rss-color"></i>michaelchristy.com/blog</a></li>
-                                <li class="mb-1"><a href="#"><i class="fab fa-fw fa-pinterest-square mr-1 pinterest-color"></i>pinterest.com/michaelchristy</a></li>
-                                <li class="mb-1"><a href="#"><i class="fab fa-fw fa-youtube mr-1 youtube-color"></i>youtube/michaelchristy</a></li>
+                                <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ user.consumer_profile.date_of_birth }}</li>
                             </ul>
                             </div>
                         </div>
                         <div class="card-body border-top">
-                            <h3 class="font-16">Category</h3>
-                            <div>
-                                <a href="#" class="badge badge-light mr-1">Fitness</a><a href="#" class="badge badge-light mr-1">Life Style</a><a href="#" class="badge badge-light mr-1">Gym</a>
-                            </div>
+                            <h3 class="font-16">Recipes</h3>
+                            <h1 class="mb-0">{{ user.get_recipe_count }}</h1>
+                        </div>
+                        <div class="card-body border-top">
+                            <h3 class="font-16">Menus</h3>
+                            <h1 class="mb-0">{{ user.get_menu_count }}</h1>
                         </div>
                     </div>
                     <!-- ============================================================== -->
@@ -103,11 +79,11 @@
                     <!-- ============================================================== -->
                     <div class="influence-profile-content pills-regular">
                         <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
-                            <li class="nav-item">
+                            <!--<li class="nav-item">
                                 <a class="nav-link active" id="pills-packages-tab" data-toggle="pill" href="#pills-settings" role="tab" aria-controls="pills-settings" aria-selected="true">Settings</a>
-                            </li>
+                            </li>-->
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-diet-tab" data-toggle="pill" href="#pills-diet" role="tab" aria-controls="pills-diet" aria-selected="false">Diet</a>
+                                <a class="nav-link" id="pills-diet-tab" data-toggle="pill" href="#pills-diet" role="tab" aria-controls="pills-diet" aria-selected="false">Daily Intake</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="pills-statistics-tab" data-toggle="pill" href="#pills-statistics" role="tab" aria-controls="pills-statistics" aria-selected="false">Statistics</a>
@@ -117,12 +93,9 @@
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade" id="pills-settings" role="tabpanel" aria-labelledby="pills-packages-tab">
+                            <!--<div class="tab-pane fade" id="pills-settings" role="tabpanel" aria-labelledby="pills-packages-tab">
                                 <div class="dashboard-short-list">
                                     <div class="row">
-                                        <!-- ============================================================== -->
-                                        <!-- shortable list  -->
-                                        <!-- ============================================================== -->
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 co-12">
                                             <section class="card card-fluid">
                                                 <h5 class="card-header drag-handle"> Shortable List </h5>
@@ -182,7 +155,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="tab-pane fade" id="pills-diet" role="tabpanel" aria-labelledby="pills-diet-tab">
                                 <div class="dashboard-short-list">
                                     <div class="row">
@@ -190,58 +163,33 @@
                                         <!-- shortable list  -->
                                         <!-- ============================================================== -->
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 co-12">
+                                            {% for intake in daily_intake_recipes %}
+                                                <section class="card card-fluid">
+                                                    <h5 class="card-header drag-handle">{{ intake.intake_at }}</h5>
+                                                    <h2 class="font-14 m-b-10"><a href="/recipe/detail/{{ intake.intake_recipe_id.id }}">{{ intake.intake_recipe_id.title }}</a></h2>
+                                                </section>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show active" id="pills-statistics" role="tabpanel" aria-labelledby="pills-statistics-tab">
+                                <div class="dashboard-short-list">
+                                    <div class="row">
+                                        <!-- ============================================================== -->
+                                        <!-- shortable list  -->
+                                        <!-- ============================================================== -->
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 co-12">
                                             <section class="card card-fluid">
-                                                <h5 class="card-header drag-handle"> Shortable List </h5>
+                                                <h5 class="card-header drag-handle"> Members </h5>
                                                 <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="items">
                                                     <li class="list-group-item align-items-center drag-handle">
                                                         <span class="drag-indicator"></span>
-                                                        <div> Item one </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
+                                                        <div> Number of consumers: {{ consumer_count }} </div>
                                                     </li>
                                                     <li class="list-group-item align-items-center drag-handle">
                                                         <span class="drag-indicator"></span>
-                                                        <div> Item two </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div>Item three</div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div> Item four </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div> Item five </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
+                                                        <div> Number of providers: {{ provider_count }} </div>
                                                     </li>
                                                 </ul>
                                             </section>
@@ -249,86 +197,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade show active" id="pills-statistics" role="tabpanel" aria-labelledby="pills-statistics-tab">
-                            </div>
                             <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
                                 <div class="card">
-                                    <h5 class="card-header">Campaign Reviews</h5>
-                                    <div class="card-body">
-                                        <div class="review-block">
-                                            <p class="review-text font-italic m-0">“Quisque lobortis vestibulum elit, vel fermentum elit pretium et. Nullam id ultrices odio. Cras id nulla mollis, molestie diam eu, facilisis tortor. Mauris ultrices lectus laoreet commodo hendrerit. Nullam varius arcu sed aliquam imperdiet. Etiam ut luctus augue.”</p>
-                                            <div class="rating-star mb-4">
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                            </div>
-                                            <span class="text-dark font-weight-bold">Tabitha C. Campbell</span><small class="text-mute"> (Company name)</small>
-                                        </div>
-                                    </div>
+                                    <h5 class="card-header">Comments</h5>
+                                    {% for comment in comments %}
                                     <div class="card-body border-top">
                                         <div class="review-block">
-                                            <p class="review-text font-italic m-0">“Maecenas rutrum viverra augue. Nulla in eros vitae ante ullamcorper congue. Praesent tristique massa ac arcu dapibus tincidunt. Mauris arcu mi, lacinia et ipsum vel, sollicitudin laoreet risus.”</p>
-                                            <div class="rating-star mb-4">
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                            </div>
-                                            <span class="text-dark font-weight-bold">Luise M. Michet</span><small class="text-mute"> (Company name)</small>
+                                            <a href="/recipe/detail/{{ comment.recipe_id }}" class="product-title">{{ comment.recipe.title }}</a>
+                                            <p class="review-text font-italic m-0">{{ comment.content }}</p>
+                                            <small class="text-mute"> {{ comment.created_at }}</small> by <span class="text-dark font-weight-bold">{{ user.username }}</span>
                                         </div>
                                     </div>
-                                    <div class="card-body border-top">
-                                        <div class="review-block">
-                                            <p class="review-text font-italic m-0">“ Cras non rutrum neque. Sed lacinia ex elit, vel viverra nisl faucibus eu. Aenean faucibus neque vestibulum condimentum maximus. In id porttitor nisi. Quisque sit amet commodo arcu, cursus pharetra elit. Nam tincidunt lobortis augueat euismod ante sodales non. ”</p>
-                                            <div class="rating-star mb-4">
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                            </div>
-                                            <span class="text-dark font-weight-bold">Gloria S. Castillo</span><small class="text-mute"> (Company name)</small>
-                                        </div>
-                                    </div>
-                                    <div class="card-body border-top">
-                                        <div class="review-block">
-                                            <p class="review-text font-italic m-0">“Vestibulum cursus felis vel arcu convallis, viverra commodo felis bibendum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin non auctor est, sed lacinia velit. Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus mus.”</p>
-                                            <div class="rating-star mb-4">
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                            </div>
-                                            <span class="text-dark font-weight-bold">Virgina G. Lightfoot</span><small class="text-mute"> (Company name)</small>
-                                        </div>
-                                    </div>
-                                    <div class="card-body border-top">
-                                        <div class="review-block">
-                                            <p class="review-text font-italic m-0">“Integer pretium laoreet mi ultrices tincidunt. Suspendisse eget risus nec sapien malesuada ullamcorper eu ac sapien. Maecenas nulla orci, varius ac tincidunt non, ornare a sem. Aliquam sed massa volutpat, aliquet nibh sit amet, tincidunt ex. Donec interdum pharetra dignissim.”</p>
-                                            <div class="rating-star mb-4">
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                                <i class="fa fa-fw fa-star"></i>
-                                            </div>
-                                            <span class="text-dark font-weight-bold">Ruby B. Matheny</span><small class="text-mute"> (Company name)</small>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item active"><a class="page-link " href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                    </ul>
-                                </nav>
                             </div>
                             <!--<div class="tab-pane fade" id="pills-msg" role="tabpanel" aria-labelledby="pills-msg-tab">
                                 <div class="card">

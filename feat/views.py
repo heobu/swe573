@@ -10,13 +10,22 @@ import re
 from urllib.request import urlopen
 import json
 
+from feat.converter.converter import CookingConverter
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
-    CreateRecipeForm, CreateMenuForm
-from feat.models import Recipe, Menu
+    CreateRecipeForm, CreateMenuForm, CommentForm
+from feat.models import Recipe, Menu, Comment, RecipeLike, MenuLike, ConsumerProfile, ProviderProfile, \
+    DailyIntakeFromRecipe
 
 
 class HomeView(TemplateView):
-    template_name = "index.html"
+    #template_name = "index.html"
+
+    def get(self, request):
+        most_viewed_recipes = Recipe.objects.filter(view_number__gt=0).order_by('view_number').reverse()[:3]
+        most_liked_recipes = sorted(Recipe.objects.filter(), key=lambda a: a.get_like_count(), reverse=True)[:3]
+        most_viewed_menus = Menu.objects.filter(view_number__gt=0).order_by('view_number').reverse()[:3]
+        most_liked_menus = sorted(Menu.objects.filter(), key=lambda a: a.get_like_count(), reverse=True)[:3]
+        return render(request, "index.html", {'most_viewed_recipes': most_viewed_recipes, 'most_liked_recipes': most_liked_recipes, 'most_viewed_menus': most_viewed_menus, 'most_liked_menus': most_liked_menus})
 
 
 class UserHomeView(LoginRequiredMixin, TemplateView):
@@ -25,11 +34,20 @@ class UserHomeView(LoginRequiredMixin, TemplateView):
         username = request.user.username
         recipes = Recipe.objects.filter(created_by__username=username).order_by('created_at').reverse()
         menus = Menu.objects.filter(created_by__username=username).order_by('created_at').reverse()
-        return render(request, "user_home.html", {'recipes': recipes, 'menus': menus})
+        rlikes = Recipe.objects.filter(recipelike__cprofiles__user_id=request.user.id).order_by('created_at').reverse()[:10]
+        mlikes = Menu.objects.filter(menulike__cprofiles__user_id=request.user.id).order_by('created_at').reverse()[:10]
+        return render(request, "user_home.html", {'recipes': recipes, 'menus': menus, 'rlikes': rlikes, 'mlikes': mlikes})
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = "profile.html"
+    #template_name = "profile.html"
+
+    def get(self, request):
+        consumer_count = ConsumerProfile.objects.all().count()
+        provider_count = ProviderProfile.objects.all().count()
+        comments = Comment.objects.filter(created_by=request.user).order_by('created_at').reverse()
+        daily_intake_recipes = DailyIntakeFromRecipe.objects.all().order_by('intake_at').reverse()
+        return render(request, "profile.html", {'consumer_count': consumer_count, 'provider_count': provider_count, 'comments': comments, 'daily_intake_recipes': daily_intake_recipes})
 
 
 class Logout(LoginRequiredMixin, View):
@@ -120,7 +138,7 @@ class RegisterAsProviderView(View):
         else:
             return redirect('pages/sign-up.html')
 
-class RecipeCreateView(View, LoginRequiredMixin):
+class RecipeCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         form = CreateRecipeForm()
@@ -135,7 +153,7 @@ class RecipeCreateView(View, LoginRequiredMixin):
             # adapter: string -> ingredient model
             ingredients_input = form.cleaned_data.get('ingredients')
             #Ex: Tomatoes, grape, raw(321360):2;
-            pattern = r'([\w*(,\s)?]+)\(([0-9]*)\)\:([0-9]*)\;'
+            pattern = r'([\w*(,\s)?]+)\(([0-9]*)\)\:([\w*(,\s)?]+)\:([0-9]*)\;'
             r = re.compile(pattern)
             ingredients_list = r.findall(ingredients_input)
             #for i in ingredients_list:
@@ -153,23 +171,47 @@ class RecipeCreateView(View, LoginRequiredMixin):
             }
             for i in ingredients_list:
                 food_id = i[1]
-                quantity = int(i[2])
+                unit = i[2]
+                quantity = int(i[3])
                 url = "https://api.nal.usda.gov/fdc/v1/food/{}?api_key={}".format(food_id, api_key)
                 serialized_data = urlopen(url).read()
                 # check the response status
                 data = json.loads(serialized_data)
                 # check whether the fields accessed here exist in the first place
+                portions = data["foodPortions"]
+                for portion in portions:
+                    if portion["measureUnit"]["name"] == unit:
+                        weight = portion["gramWeight"]
                 nutrients = data["foodNutrients"]
                 for n in nutrients:
                     nutrient_name = n["nutrient"]["name"]
                     #nutrient_value = n["nutrient"]["rank"]
-                    try:
-                        nutrient_value = n["amount"]
-                    except KeyError:
-                        print("Nutrient amount could not be found for: ", nutrient_name)
-                        nutrient_value = 0
                     if nutrient_name in nutritional_value:
-                        nutritional_value[nutrient_name] += quantity * nutrient_value
+                        # try:
+                        #     nutrient_value = n["amount"]
+                        #     nutrient_unit = n["nutrient"]["unitName"]
+                        #     # should kJ always be ignored? or is there a case in which only this is given instead of kcal?
+                        #     if nutrient_unit.lower() == "kj":
+                        #         continue
+                        #     nutrient_value = CookingConverter().to_standard(nutrient_value, nutrient_unit, nutrient_name)
+                        # except KeyError:
+                        #     print("Nutrient amount/unit: '", nutrient_name, "' could not be found for food item: '", food_id, "'.")
+                        #     nutrient_value = 0
+
+                        try:
+                            # nutritional value per 100g
+                            nutrient_value = n["amount"]
+
+                            nutrient_unit = n["nutrient"]["unitName"]
+                            # should kJ always be ignored? or is there a case in which only this is given instead of kcal?
+                            if nutrient_unit.lower() == "kj":
+                                continue
+
+                        except KeyError:
+                            print("Nutrient amount/unit: '", nutrient_name, "' could not be found for food item: '", food_id, "'.")
+                            nutrient_value = 0
+
+                        nutritional_value[nutrient_name] += quantity * weight * nutrient_value / 100
                 # for n in nutrients:
                 #     nutrient_name = n["nutrient"]["name"]
                 #     nutrient_value = n["nutrient"]["rank"]
@@ -188,23 +230,43 @@ class RecipeCreateView(View, LoginRequiredMixin):
             #nutritional_value_str = json.dumps(nutritional_value)
 
             description = form.cleaned_data.get('description')
+            instructions = form.cleaned_data.get('instructions')
             difficulty = form.cleaned_data.get('difficulty')
             prepared_in = form.cleaned_data.get('prepared_in')
+            image_link = form.cleaned_data.get('image_link')
+            if image_link == "":
+                image_link = "https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg"
             #form.save(commit=True)
-            Recipe.objects.create(created_by=created_by, title=title, ingredients=ingredients_input, nutritional_value=nutritional_value, description=description, difficulty=difficulty, prepared_in=prepared_in)
+            Recipe.objects.create(created_by=created_by, title=title, ingredients=ingredients_input, nutritional_value=nutritional_value, description=description, instructions=instructions, difficulty=difficulty, prepared_in=prepared_in, image_link=image_link)
             return redirect('user_home')
         else:
             return render('create-recipe')
 
-class RecipeView(View, LoginRequiredMixin):
+class RecipeView(LoginRequiredMixin, View):
     def get(self, request, id=None):
         #recipe = Recipe.objects.all()[0]#filter(id=id)
         recipe = Recipe.objects.get(id=id)
-        return render(request, "recipe-detail.html", {'recipe': recipe})
+        recipe.increase_view_number()
+        form = CommentForm()
+        return render(request, "recipe-detail.html", {'recipe': recipe, 'form': form})
+
+    # , recipe=None
+    def post(self, request, id=None):
+        form = CommentForm(request.POST, instance=request.user)
+        if form.is_valid():
+            created_by = request.user
+            recipe = Recipe.objects.get(id=id)
+            content = form.cleaned_data.get('content')
+            #recipe = form.cleaned_data.get('recipe')
+            Comment.objects.create(created_by=created_by, content=content, recipe=recipe)
+            #return redirect('user_home')
+            return redirect('/recipe/detail/{}'.format(id))
+        else:
+            return redirect('/recipe/detail/{}'.format(id))
 
 
 
-class MenuCreateView(View, LoginRequiredMixin):
+class MenuCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         form = CreateMenuForm()
@@ -216,6 +278,8 @@ class MenuCreateView(View, LoginRequiredMixin):
         if form.is_valid():
             created_by = request.user
             title = form.cleaned_data.get('title')
+            description = form.cleaned_data.get('description')
+            image_link = form.cleaned_data.get('image_link')
 
             # adapter: string -> ingredient model
             food_items_input = form.cleaned_data.get('food_items')
@@ -247,7 +311,48 @@ class MenuCreateView(View, LoginRequiredMixin):
                         menu_nutritional_value[nutrient_name] += quantity * nutrient_value
 
             #form.save(commit=True)
-            Menu.objects.create(created_by=created_by, title=title, food_items=food_items, nutritional_value=menu_nutritional_value)
+            if image_link == "":
+                image_link = "https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg"
+            Menu.objects.create(created_by=created_by, title=title, description=description, food_items=food_items, nutritional_value=menu_nutritional_value, image_link=image_link)
             return redirect('user_home')
         else:
             return render('create-menu')
+
+class MenuView(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        #recipe = Recipe.objects.all()[0]#filter(id=id)
+        menu = Menu.objects.get(id=id)
+        menu.increase_view_number()
+        return render(request, "menu-detail.html", {'menu': menu})
+
+
+class SearchRecipeView(LoginRequiredMixin, View):
+    def get(self, request, contains=None):
+        keyword = request.GET.get('contains', '')
+        #criteria = request.GET.get('filter', '')
+        if keyword != '':
+            recipes = Recipe.objects.filter(title__contains=keyword) |\
+                     Recipe.objects.filter(description__contains=keyword) |\
+                     Recipe.objects.filter(ingredients__contains=keyword) |\
+                     Recipe.objects.filter(instructions__contains=keyword)
+        else:
+            recipes = Recipe.objects.all()
+
+        #creators = ConsumerProfile.objects.filter(consumer_profile)
+        #if criteria == '':
+        #    pass
+        #elif criteria == '':
+        #    recipes.order_by()
+        return render(request, "recipe-search-results.html", {'recipes': recipes, 'keyword': keyword})
+
+
+class SearchMenuView(LoginRequiredMixin, View):
+    def get(self, request, contains=None):
+        keyword = request.GET.get('contains', '')
+        if keyword != '':
+            menus = Menu.objects.filter(title__contains=keyword) |\
+                     Menu.objects.filter(description__contains=keyword)
+        else:
+            menus = Menu.objects.all()
+
+        return render(request, "menu-search-results.html", {'menus': menus, 'keyword': keyword})

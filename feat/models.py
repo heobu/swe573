@@ -10,6 +10,12 @@ class User(AbstractUser):
     is_consumer = models.BooleanField(default=False)
     is_provider = models.BooleanField(default=False)
 
+    def get_recipe_count(self):
+        return self.recipe_creator.count()
+
+    def get_menu_count(self):
+        return self.menu_creator.count()
+
 
 class ConsumerProfile(models.Model):
     date_of_birth = models.DateField(null=True)
@@ -26,13 +32,14 @@ def create_user_profile(sender, instance, created, **kwargs):
     print('****', created)
     if created:
         if instance.is_provider:
-            #ProviderProfile.objects.get_or_create(user=instance)
+            # ProviderProfile.objects.get_or_create(user=instance)
             provider_profile = ProviderProfile(user=instance)
             provider_profile.save()
         elif instance.is_consumer:
-            #ConsumerProfile.objects.get_or_create(user=instance)
+            # ConsumerProfile.objects.get_or_create(user=instance)
             consumer_profile = ConsumerProfile(user=instance)
             consumer_profile.save()
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -46,28 +53,113 @@ def save_user_profile(sender, instance, **kwargs):
 class Recipe(models.Model):
     print('rrrr')
     title = models.TextField(max_length=40, null=False)
-    ingredients = models.TextField(max_length=100, null=False)
+    ingredients = models.TextField(max_length=10000, null=False)
     nutritional_value = models.TextField(max_length=1000, null=False)
-    description = models.TextField(max_length=300, null=False)
+    description = models.TextField(max_length=3000, null=False)
+    instructions = models.TextField(max_length=3000, null=False)
     # picture (optional)
+    image_link = models.URLField(max_length=300, null=False, blank=False, default="https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="recipe_creator")
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(null=False)
     prepared_in = models.IntegerField(null=False)
+    view_number = models.IntegerField(null=False, default=0)
+
+    def get_like_count(self):
+        return self.recipelike.cprofiles.count()
+
+    def get_view_number(self):
+        return self.view_number
+
+    def increase_view_number(self):
+        self.view_number = self.view_number + 1
+        self.save()
+
+
+@receiver(post_save, sender=Recipe)
+def create_recipe_like(sender, instance, created, **kwargs):
+    print('rl****', created)
+    if created:
+        recipe_like = RecipeLike(recipe=instance)
+        recipe_like.save()
+
+
+@receiver(post_save, sender=Recipe)
+def save_recipe_like(sender, instance, **kwargs):
+    print('rl----')
+    RecipeLike.objects.get_or_create(recipe=instance)
+
 
 class FoodItem(models.Model):
     print('fififi')
 
+
 class Menu(models.Model):
     print('mmmm')
     title = models.TextField(max_length=40, null=False)
+    description = models.TextField(max_length=300, null=False)
     food_items = models.CharField(max_length=300)
     nutritional_value = models.TextField(max_length=1000, null=False)
+    image_link = models.URLField(max_length=300, null=False, blank=False, default="https://raw.githubusercontent.com/heobu/swe573/feature/posts-like-dislike-follow/feat/static/assets/images/eco-slider-img-1.jpg")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="menu_creator")
     created_at = models.DateTimeField(auto_now_add=True)
+    view_number = models.IntegerField(null=False, default=0)
 
     def set_food_items(self, food_items):
         self.food_items = json.dumps(food_items)
 
     def get_food_items(self):
         return json.loads(self.food_items)
+
+    def get_like_count(self):
+        return self.menulike.cprofiles.count()
+
+    def get_view_number(self):
+        return self.view_number
+
+    def increase_view_number(self):
+        self.view_number = self.view_number + 1
+        self.save()
+
+
+@receiver(post_save, sender=Menu)
+def create_menu_like(sender, instance, created, **kwargs):
+    print('ml****', created)
+    if created:
+        menu_like = MenuLike(menu=instance)
+        menu_like.save()
+
+
+@receiver(post_save, sender=Menu)
+def save_menu_like(sender, instance, **kwargs):
+    print('ml----')
+    MenuLike.objects.get_or_create(menu=instance)
+
+
+class RecipeLike(models.Model):
+    recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, null=False)
+    cprofiles = models.ManyToManyField(ConsumerProfile)
+
+
+class MenuLike(models.Model):
+    menu = models.OneToOneField(Menu, on_delete=models.CASCADE, null=False)
+    cprofiles = models.ManyToManyField(ConsumerProfile)
+
+class Comment(models.Model):
+    content = models.TextField(max_length=300, null=False)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=False, related_name="comment")
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="author")
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False, null=False)
+
+class DailyIntakeFromRecipe(models.Model):
+    consumer = models.ForeignKey(ConsumerProfile, on_delete=models.CASCADE, null=False, related_name="intaker_recipe")
+    intake_at = models.DateTimeField(null=False)
+    intake_recipe_id = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=False, related_name="intake_recipe")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class DailyIntakeFromMenu(models.Model):
+    consumer = models.ForeignKey(ConsumerProfile, on_delete=models.CASCADE, null=False, related_name="intaker_menu")
+    intake_at = models.DateTimeField(null=False)
+    intake_menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE, null=False, related_name="intake_menu")
+    created_at = models.DateTimeField(auto_now_add=True)

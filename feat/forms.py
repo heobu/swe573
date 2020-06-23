@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from feat.models import User, ConsumerProfile, ProviderProfile, Recipe, Menu
+from feat.models import User, ConsumerProfile, ProviderProfile, Recipe, Menu, Comment
 
 
 class ConsumerProfileForm(forms.ModelForm):
@@ -42,13 +42,21 @@ class RegisterAsProviderForm(UserCreationForm):
 
 class CreateRecipeForm(forms.ModelForm):
     description = forms.CharField(widget=forms.TextInput())
+    image_link = forms.URLField(required=False)
 
     class Meta:
         model = Recipe
-        fields = ('title', 'ingredients', 'description', 'difficulty', 'prepared_in')
+        fields = ('title', 'ingredients', 'description', 'instructions', 'difficulty', 'prepared_in', 'image_link')
 
 
 class CreateMenuForm(forms.ModelForm):
+    image_link = forms.URLField(required=False)
+
     class Meta:
         model = Menu
-        fields = ('title', 'food_items')
+        fields = ('title', 'description', 'food_items', 'image_link')
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)

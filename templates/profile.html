@@ -225,6 +225,28 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade show active" id="pills-statistics" role="tabpanel" aria-labelledby="pills-statistics-tab">
+                                <div class="dashboard-short-list">
+                                    <div class="row">
+                                        <!-- ============================================================== -->
+                                        <!-- shortable list  -->
+                                        <!-- ============================================================== -->
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 co-12">
+                                            <section class="card card-fluid">
+                                                <h5 class="card-header drag-handle"> Members </h5>
+                                                <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="items">
+                                                    <li class="list-group-item align-items-center drag-handle">
+                                                        <span class="drag-indicator"></span>
+                                                        <div> Number of consumers: {{ consumer_count }} </div>
+                                                    </li>
+                                                    <li class="list-group-item align-items-center drag-handle">
+                                                        <span class="drag-indicator"></span>
+                                                        <div> Number of providers: {{ provider_count }} </div>
+                                                    </li>
+                                                </ul>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
                                 <div class="card">

@@ -13,7 +13,7 @@ import json
 from feat.converter.converter import CookingConverter
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
     CreateRecipeForm, CreateMenuForm, CommentForm
-from feat.models import Recipe, Menu, Comment, RecipeLike, MenuLike
+from feat.models import Recipe, Menu, Comment, RecipeLike, MenuLike, ConsumerProfile, ProviderProfile
 
 
 class HomeView(TemplateView):
@@ -39,7 +39,12 @@ class UserHomeView(LoginRequiredMixin, TemplateView):
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = "profile.html"
+    #template_name = "profile.html"
+
+    def get(self, request):
+        consumer_count = ConsumerProfile.objects.all().count()
+        provider_count = ProviderProfile.objects.all().count()
+        return render(request, "profile.html", {'consumer_count': consumer_count, 'provider_count': provider_count})
 
 
 class Logout(LoginRequiredMixin, View):

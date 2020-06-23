@@ -1,8 +1,8 @@
 # swe573
 
-This is a part of the SWE 573 project.
+FEAT application is a SWE 573 project.
 
-For more information go to Wiki.
+For more information go to [Wiki](https://github.com/heobu/swe573/wiki).
 
 ### Live [here](http://ec2-54-147-89-156.compute-1.amazonaws.com:8000/).
 

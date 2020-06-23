@@ -109,15 +109,15 @@
                                 <!--<a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>-->
                                 {% if user.is_consumer %}
                                     {% if user.consumer_profile in recipe.recipelike.cprofiles.all %}
-                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-paint-brush" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                        <a href="#" class="product-wishlist-btn" onclick="toggleRecipeLike({{ recipe.id }})"><i class="fas fa-paint-brush" id="recipe-like"></i></a>
                                     {% else %}
-                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-heart" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                        <a href="#" class="product-wishlist-btn" onclick="toggleRecipeLike({{ recipe.id }})"><i class="fas fa-heart" id="recipe-like"></i></a>
                                     {% endif %}
                                 {% elif user.is_provider %}
                                     {% if user.provider_profile in recipe.recipelike.cprofiles.all %}
-                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-paint-brush" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                        <a href="#" class="product-wishlist-btn" onclick="toggleRecipeLike({{ recipe.id }})"><i class="fas fa-paint-brush" id="recipe-like"></i></a>
                                     {% else %}
-                                        <a href="#" class="product-wishlist-btn"><i class="fas fa-heart" id="recipe-like" onclick="toggleRecipeLike({{ recipe.id }})"></i></a>
+                                        <a href="#" class="product-wishlist-btn" onclick="toggleRecipeLike({{ recipe.id }})"><i class="fas fa-heart" id="recipe-like"></i></a>
                                     {% endif %}
                                 {% else %}
                                     <!-- Other types of users? Such as Admmin... -->

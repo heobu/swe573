@@ -151,3 +151,15 @@ class Comment(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="author")
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False, null=False)
+
+class DailyIntakeFromRecipe(models.Model):
+    consumer = models.ForeignKey(ConsumerProfile, on_delete=models.CASCADE, null=False, related_name="intaker_recipe")
+    intake_at = models.DateTimeField(null=False)
+    intake_recipe_id = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=False, related_name="intake_recipe")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class DailyIntakeFromMenu(models.Model):
+    consumer = models.ForeignKey(ConsumerProfile, on_delete=models.CASCADE, null=False, related_name="intaker_menu")
+    intake_at = models.DateTimeField(null=False)
+    intake_menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE, null=False, related_name="intake_menu")
+    created_at = models.DateTimeField(auto_now_add=True)

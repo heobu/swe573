@@ -32,18 +32,10 @@
                         <div id="productslider-1" class="product-carousel carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
                                 <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                             </ol>
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <img class="d-block" src="{{ menu.image_link }}" alt="First slide">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="d-block" src="{{ menu.image_link }}" alt="Second slide">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="d-block" src="{{ menu.image_link }}" alt="Third slide">
                                 </div>
                             </div>
                             <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -79,9 +71,9 @@
                             </div>
                         </div>
                         <div class="product-colors border-bottom">
-                            <h4>Viewed by</h4>
+                            <h4>Viewed</h4>
                             <div class="product-rating d-inline-block">
-                                <i class="fas fa-people-carry">{{ menu.get_view_number }} member(s)</i>
+                                <i class="fas fa-people-carry">{{ menu.get_view_number }} time(s)</i>
                             </div>
                         </div>
                         <div class="product-description border-bottom">
@@ -106,9 +98,7 @@
                                 {% else %}
                                     <!-- Other types of users? Such as Admmin... -->
                                 {% endif %}
-                                <a href="#" class="btn btn-primary"><i class="fas fa-tag"></i></a>
-                                <a href="#" class="btn btn-outline-light">Add to Daily Intake</a>
-                                <a href="#" class="btn btn-danger"><i class="fas fa-ban"></i></a>
+                                <!--<a href="#" class="btn btn-outline-light">Add to Daily Intake</a>-->
                             </div>
                         </div>
                     </div>

@@ -1,12 +1,13 @@
 from functools import partial
 
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 
-from feat.models import ConsumerProfile, ProviderProfile, Recipe, Menu, RecipeLike, MenuLike
+from feat.models import ConsumerProfile, ProviderProfile, Recipe, Menu, RecipeLike, MenuLike, DailyIntakeFromRecipe
 from feat.serializers import ConsumerProfileSerializer, ProviderProfileSerializer, RecipeSerializer, MenuSerializer, \
-    RecipeLikeSerializer, MenuLikeSerializer
+    RecipeLikeSerializer, MenuLikeSerializer, DailyIntakeFromRecipeSerializer
 
 
 class ConsumerProfileViewSet(viewsets.ModelViewSet):
@@ -67,5 +68,29 @@ class UpdateMenuLikeRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.GenericV
             print("Liking menu")
             cprofile = ConsumerProfile.objects.get(user_id=request.user.id)
             like.cprofiles.add(cprofile)
+
+        return HttpResponse(status=200)
+
+
+class UpdateDailyViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = DailyIntakeFromRecipeSerializer
+    #lookup_field = "intake_at"
+
+    @action(methods=['post'], detail=True, url_path='recipe', url_name='recipe')
+    def recipe(self, request, pk=None):
+        recipe = Recipe.objects.get(id=pk)
+        print("Add daily intake from recipe with id: ", pk)
+        serializer = DailyIntakeFromRecipeSerializer(data=request.data)
+        if serializer.is_valid():
+            print("Validated data: ", serializer.validated_data)
+            intake_at = serializer.data['intake_at']
+            print("Intake at: ", intake_at)
+            cprofile = ConsumerProfile.objects.get(user_id=request.user.id)
+            DailyIntakeFromRecipe.objects.create(consumer=cprofile, intake_at=intake_at, intake_recipe_id=recipe)
+            #cprofile = ConsumerProfile.objects.get(menulike__cprofiles__user_id=request.user.id, menulike__menu_id=pk)
+            print("Intake recipe added")
+        else:
+            print("Intake could not be added! ", serializer.errors)
 
         return HttpResponse(status=200)

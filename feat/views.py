@@ -13,7 +13,8 @@ import json
 from feat.converter.converter import CookingConverter
 from feat.forms import RegisterAsConsumerForm, RegisterAsProviderForm, ConsumerProfileForm, ProviderProfileForm, \
     CreateRecipeForm, CreateMenuForm, CommentForm
-from feat.models import Recipe, Menu, Comment, RecipeLike, MenuLike, ConsumerProfile, ProviderProfile
+from feat.models import Recipe, Menu, Comment, RecipeLike, MenuLike, ConsumerProfile, ProviderProfile, \
+    DailyIntakeFromRecipe
 
 
 class HomeView(TemplateView):
@@ -45,7 +46,8 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         consumer_count = ConsumerProfile.objects.all().count()
         provider_count = ProviderProfile.objects.all().count()
         comments = Comment.objects.filter(created_by=request.user).order_by('created_at').reverse()
-        return render(request, "profile.html", {'consumer_count': consumer_count, 'provider_count': provider_count, 'comments': comments})
+        daily_intake_recipes = DailyIntakeFromRecipe.objects.all().order_by('intake_at').reverse()
+        return render(request, "profile.html", {'consumer_count': consumer_count, 'provider_count': provider_count, 'comments': comments, 'daily_intake_recipes': daily_intake_recipes})
 
 
 class Logout(LoginRequiredMixin, View):
@@ -260,7 +262,7 @@ class RecipeView(LoginRequiredMixin, View):
             #return redirect('user_home')
             return redirect('/recipe/detail/{}'.format(id))
         else:
-            return render('create-menu')
+            return redirect('/recipe/detail/{}'.format(id))
 
 
 
@@ -327,6 +329,7 @@ class MenuView(LoginRequiredMixin, View):
 class SearchRecipeView(LoginRequiredMixin, View):
     def get(self, request, contains=None):
         keyword = request.GET.get('contains', '')
+        #criteria = request.GET.get('filter', '')
         if keyword != '':
             recipes = Recipe.objects.filter(title__contains=keyword) |\
                      Recipe.objects.filter(description__contains=keyword) |\
@@ -335,6 +338,11 @@ class SearchRecipeView(LoginRequiredMixin, View):
         else:
             recipes = Recipe.objects.all()
 
+        #creators = ConsumerProfile.objects.filter(consumer_profile)
+        #if criteria == '':
+        #    pass
+        #elif criteria == '':
+        #    recipes.order_by()
         return render(request, "recipe-search-results.html", {'recipes': recipes, 'keyword': keyword})
 
 

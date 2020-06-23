@@ -9,6 +9,7 @@ router.register(r'recipe_create', api_views.RecipeCreateViewSet)
 router.register(r'menu_create', api_views.MenuCreateViewSet)
 router.register(r'like/recipe', api_views.UpdateRecipeLikeRetrieveViewSet)
 router.register(r'like/menu', api_views.UpdateMenuLikeRetrieveViewSet)
+router.register(r'update/daily', api_views.UpdateDailyViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

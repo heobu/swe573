@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load recipe_filter %}
 {% block content %}
     <div class="influence-profile">
         <div class="container-fluid dashboard-content ">
@@ -82,7 +83,7 @@
                                 <a class="nav-link active" id="pills-packages-tab" data-toggle="pill" href="#pills-settings" role="tab" aria-controls="pills-settings" aria-selected="true">Settings</a>
                             </li>-->
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-diet-tab" data-toggle="pill" href="#pills-diet" role="tab" aria-controls="pills-diet" aria-selected="false">Diet</a>
+                                <a class="nav-link" id="pills-diet-tab" data-toggle="pill" href="#pills-diet" role="tab" aria-controls="pills-diet" aria-selected="false">Daily Intake</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="pills-statistics-tab" data-toggle="pill" href="#pills-statistics" role="tab" aria-controls="pills-statistics" aria-selected="false">Statistics</a>
@@ -162,61 +163,12 @@
                                         <!-- shortable list  -->
                                         <!-- ============================================================== -->
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 co-12">
-                                            <section class="card card-fluid">
-                                                <h5 class="card-header drag-handle"> Shortable List </h5>
-                                                <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="items">
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div> Item one </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div> Item two </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div>Item three</div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div> Item four </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item align-items-center drag-handle">
-                                                        <span class="drag-indicator"></span>
-                                                        <div> Item five </div>
-                                                        <div class="btn-group ml-auto">
-                                                            <button class="btn btn-sm btn-outline-light">Edit</button>
-                                                            <button class="btn btn-sm btn-outline-light">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </section>
+                                            {% for intake in daily_intake_recipes %}
+                                                <section class="card card-fluid">
+                                                    <h5 class="card-header drag-handle">{{ intake.intake_at }}</h5>
+                                                    <h2 class="font-14 m-b-10"><a href="/recipe/detail/{{ intake.intake_recipe_id.id }}">{{ intake.intake_recipe_id.title }}</a></h2>
+                                                </section>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>

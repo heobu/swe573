@@ -17,20 +17,12 @@ from feat.models import Recipe, Menu, Comment, RecipeLike, MenuLike
 
 
 class HomeView(TemplateView):
-    def get_rec(self, recipe):
-        print(recipe.get_like_count())
-        print("hey")
-
     #template_name = "index.html"
+
     def get(self, request):
-        most_liked = []
         most_viewed_recipes = Recipe.objects.filter(view_number__gt=0).order_by('view_number').reverse()[:3]
-        #most_liked_recipes = Recipe.objects.complex_filter(RecipeLike.objects.filter())filter(view_number__gt=0).order_by('view_number').reverse()[:3]
-        #most_liked_recipes = Recipe.objects.all().order_by('recipelike__cprofiles__recipelike').reverse()[:3]
         most_liked_recipes = sorted(Recipe.objects.filter(), key=lambda a: a.get_like_count(), reverse=True)[:3]
-        #most_liked_recipes = Recipe.objects.filter().order_by('recipelike__cprofiles__recipelike').reverse()[:3]
         most_viewed_menus = Menu.objects.filter(view_number__gt=0).order_by('view_number').reverse()[:3]
-        #most_liked_recipes = Menu.objects.all().order_by('menulike__cprofiles__menulike').reverse()[:3]
         most_liked_menus = sorted(Menu.objects.filter(), key=lambda a: a.get_like_count(), reverse=True)[:3]
         return render(request, "index.html", {'most_viewed_recipes': most_viewed_recipes, 'most_liked_recipes': most_liked_recipes, 'most_viewed_menus': most_viewed_menus, 'most_liked_menus': most_liked_menus})
 

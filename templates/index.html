@@ -2,7 +2,6 @@
 {% load static %}
 {% load recipe_filter %}
 {% block content %}
-{% if not user.is_authenticated %}
 <div class="row">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="page-header">
@@ -121,7 +120,4 @@
         </div>
     {% endfor %}
 </div>
-{% else %}
-    <span>Invalid.</span>
-{% endif %}
 {% endblock %}

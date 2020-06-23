@@ -117,7 +117,7 @@
                             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="product-tab-1">
                                 <div class="product-content-head">
                                     <div class="product-rating d-inline-block">
-                                        <h3 class="product-title">Ingredients</h3>
+                                        <h3 class="product-title">Meals</h3>
                                     </div>
                                     <div class="product-price">
                                         <i class="fas fa-edit" onclick="editMenu('ingredients')"></i>
@@ -144,7 +144,18 @@
                                     <div class="product-rating d-inline-block">
                                         <h3 class="product-title">NutritionalValue</h3>
                                     </div>
-                                    <p>{{ menu.nutritional_value }}</p>
+                                    <ul class="sortable-lists list-group list-group-flush list-group-bordered" id="ingredient-items">
+                                        <li class="list-group-item align-items-center drag-handle">
+                                            <span class="drag-indicator"></span>
+                                            <div> Energy: {{ menu.nutritional_value|filter_nutritional_value:'Energy' }} kcal</div>
+                                            <div> Protein: {{ menu.nutritional_value|filter_nutritional_value:'Protein' }} g</div>
+                                            <div> Carbohydrates: {{ menu.nutritional_value|filter_nutritional_value:'Carbohydrates' }} g</div>
+                                            <div> Total lipid (fat): {{ menu.nutritional_value|filter_nutritional_value:'Total lipid (fat)' }} g</div>
+                                            <div> Minerals: {{ menu.nutritional_value|filter_nutritional_value:'Minerals' }} g</div>
+                                            <div> Vitamins and Other Components: {{ menu.nutritional_value|filter_nutritional_value:'Vitamins and Other Components' }} g</div>
+                                            <div> Water: {{ menu.nutritional_value|filter_nutritional_value:'Water' }} g</div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>

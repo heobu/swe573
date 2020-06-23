@@ -105,6 +105,7 @@
                         </div>
                         <div class="product-btn">
                             <div class="product-rating d-inline-block">
+                                {% csrf_token %}
                                 <!--<a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>-->
                                 {% if user.is_consumer %}
                                     {% if user.consumer_profile in recipe.recipelike.cprofiles.all %}

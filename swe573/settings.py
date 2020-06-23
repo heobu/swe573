@@ -25,9 +25,9 @@ SECRET_KEY = '+696$e*+-tva_u^))sm4%hjtyt7vqhza)&_7en6yzafw&(ot#!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-#ALLOWED_HOSTS = ['ec2-35-153-202-107.compute-1.amazonaws.com']
-
+#ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['ec2-54-211-183-192.compute-1.amazonaws.com', 'ip-172-31-46-28.ec2.internal']
+ALLOWED_HOSTS = ['ec2-54-147-89-156.compute-1.amazonaws.com', 'ip-172-31-46-28.ec2.internal']
 
 # Application definition
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +52,31 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST=('http://ec2-54-147-89-156.compute-1.amazonaws.com:8000', 'ip-172-31-46-28.ec2.internal:8000', 'http://localhost:8000')
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
 
 ROOT_URLCONF = 'swe573.urls'
 

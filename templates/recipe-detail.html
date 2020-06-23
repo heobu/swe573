@@ -2,6 +2,7 @@
 {% load static %}
 {% load recipe_filter %}
 {% block content %}
+{% csrf_token %}
     <!-- ============================================================== -->
     <!-- pageheader  -->
     <!-- ============================================================== -->
@@ -307,9 +308,13 @@
             console.log("toggle recipe like");
             if (recipe_id>=0) {
                 $.ajax({
-                    url: "http://localhost:8000/api/like/recipe/" + recipe_id + "/toggle",
+                    url: "http://localhost:8000/api/like/recipe/" + recipe_id + "/toggle/",
                     type: "get",
-                    data: "",
+                    data:"",
+                    //headers:{'api-csrftoken':'{{ csrf_token }}'},
+                    //{
+                    //  csrfmiddlewaretoken: '{{ csrf_token }}'
+                    //},
                     success: function(response) {
                         $("#recipe-like").toggleClass("fas fa-heart").toggleClass("fas fa-paint-brush");
                     },

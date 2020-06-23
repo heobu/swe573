@@ -111,7 +111,8 @@ class RegisterAsConsumerView(View):
             login(request, user)
             return redirect('user_home')
         else:
-            return redirect('pages/sign-up.html')
+            #return redirect('pages/sign-up.html')
+            return redirect('user_home')
 
 
 class RegisterAsProviderView(View):

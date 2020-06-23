@@ -44,7 +44,8 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         consumer_count = ConsumerProfile.objects.all().count()
         provider_count = ProviderProfile.objects.all().count()
-        return render(request, "profile.html", {'consumer_count': consumer_count, 'provider_count': provider_count})
+        comments = Comment.objects.filter(created_by=request.user).order_by('created_at').reverse()
+        return render(request, "profile.html", {'consumer_count': consumer_count, 'provider_count': provider_count, 'comments': comments})
 
 
 class Logout(LoginRequiredMixin, View):

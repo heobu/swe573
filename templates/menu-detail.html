@@ -73,29 +73,15 @@
                             {%  endcomment %}
                         </div>
                         <div class="product-colors border-bottom">
-                            <h4></h4>
-                            {% comment %}
+                            <h4>Liked by</h4>
                             <div class="product-rating d-inline-block">
-                                <i class="fas fa-clock">{{ menu.prepared_in }} minutes</i>
-                            </div>
-                            {% endcomment %}
-                        </div>
-                        <div class="product-size border-bottom">
-                            <h4></h4>
-                            <div class="btn-group" role="group" aria-label="First group">
-                                <div class="product-rating d-inline-block">
-                                    {% comment %}
-                                    {% for i in menu.difficulty|times %}
-                                        <i class="fa fa-fw fa-star"></i>
-                                    {% endfor %}
-                                    {% endcomment %}
-                                </div>
+                                <i class="fas fa-people-carry">{{ menu.get_like_count }} member(s)</i>
                             </div>
                         </div>
-                        <div class="product-size border-bottom">
-                            <h3 class="font-16"></h3>
-                            <div>
-                                <!--<a href="#" class="badge badge-light mr-1">tag1</a><a href="#" class="badge badge-light mr-1">tag2</a><a href="#" class="badge badge-light mr-1">tag3</a>-->
+                        <div class="product-colors border-bottom">
+                            <h4>Viewed by</h4>
+                            <div class="product-rating d-inline-block">
+                                <i class="fas fa-people-carry">{{ menu.get_view_number }} member(s)</i>
                             </div>
                         </div>
                         <div class="product-description border-bottom">

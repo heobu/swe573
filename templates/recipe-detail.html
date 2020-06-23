@@ -88,12 +88,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="product-size border-bottom">
+                        <div class="product-colors border-bottom">
+                            <h4>Liked by</h4>
+                            <div class="product-rating d-inline-block">
+                                <i class="fas fa-people-carry">{{ recipe.get_like_count }} member(s)</i>
+                            </div>
+                        </div>
+                        <div class="product-colors border-bottom">
+                            <h4>Viewed by</h4>
+                            <div class="product-rating d-inline-block">
+                                <i class="fas fa-people-carry">{{ recipe.get_view_number }} member(s)</i>
+                            </div>
+                        </div>
+                        <!--<div class="product-size border-bottom">
                             <h3 class="font-16">Tags</h3>
                             <div>
                                 <a href="#" class="badge badge-light mr-1">tag1</a><a href="#" class="badge badge-light mr-1">tag2</a><a href="#" class="badge badge-light mr-1">tag3</a>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="product-description border-bottom">
                             <h4 class="mb-1">Creator</h4>
                             <p>{{ recipe.created_by.username }}</p>

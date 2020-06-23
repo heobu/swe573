@@ -10,6 +10,12 @@ class User(AbstractUser):
     is_consumer = models.BooleanField(default=False)
     is_provider = models.BooleanField(default=False)
 
+    def get_recipe_count(self):
+        return self.recipe_creator.count()
+
+    def get_menu_count(self):
+        return self.menu_creator.count()
+
 
 class ConsumerProfile(models.Model):
     date_of_birth = models.DateField(null=True)
